@@ -24,7 +24,7 @@ gem 'puma', '~> 3.0'
 gem 'config'
 
 # Use Knock for authentication
-gem 'knock'
+gem 'knock', github: 'nsarno/knock'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

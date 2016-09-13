@@ -6,4 +6,5 @@ class HealthCheckController < ApplicationController
       status: 'OK'
     }
   end
+
 end
