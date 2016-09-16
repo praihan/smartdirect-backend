@@ -26,5 +26,9 @@ module SmartdirectApi
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+
+    # UUID's are awesome.
+    # See https://github.com/rails/rails/pull/21762
+    config.active_record.primary_key = :uuid
   end
 end
