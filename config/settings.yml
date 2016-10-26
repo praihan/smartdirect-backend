@@ -1,0 +1,4 @@
+auth0:
+  known_oauth_providers:
+    - github
+    - google-oauth2
