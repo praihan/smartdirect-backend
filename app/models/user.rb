@@ -5,16 +5,12 @@ class User < ApplicationRecord
     sub_claim = payload['sub']
 
     # Just to be safe...
-    unless sub_claim.is_a? String
-      return nil
-    end
+    return nil unless sub_claim.is_a? String
 
     # Only accept recognized providers, e.g. 'github|', 'google-oauth2|'
     # Take note of the pipe (|) that separates the provider from their ID
     known_providers = Settings[:auth0][:known_oauth_providers]
-    if known_providers.none? { |provider| sub_claim.start_with? "#{provider}|" }
-      return nil
-    end
+    return nil if known_providers.none? { |provider| sub_claim.start_with? "#{provider}|" }
 
     # Since we provide no sign up mechanism, users are created on the fly
     return self.find_or_create_by identifiable_claim: sub_claim

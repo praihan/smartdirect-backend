@@ -1,7 +1,6 @@
 class HealthCheckController < ApplicationController
-  before_action :authenticate_user
 
-  def show
+  def index
     render json: {
       status: 'OK'
     }
