@@ -26,6 +26,12 @@ gem 'config'
 # Use Knock for authentication
 gem 'knock', github: 'nsarno/knock'
 
+# Use JR for simplifying JSON API creation
+gem 'jsonapi-resources'
+# Use JR-Authorization + Pundit for Authorization
+gem 'jsonapi-authorization'
+gem 'pundit'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri

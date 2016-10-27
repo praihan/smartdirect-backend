@@ -62,6 +62,12 @@ GEM
     globalid (0.3.7)
       activesupport (>= 4.1.0)
     i18n (0.7.0)
+    jsonapi-authorization (0.8.1)
+      jsonapi-resources (~> 0.8.0.beta1)
+      pundit (~> 1.0)
+    jsonapi-resources (0.8.1)
+      concurrent-ruby
+      rails (>= 4.0)
     jwt (1.5.4)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
@@ -88,6 +94,8 @@ GEM
     pg (0.19.0-x86-mingw32)
     pkg-config (1.1.7)
     puma (3.6.0)
+    pundit (1.1.0)
+      activesupport (>= 3.0.0)
     rack (2.0.1)
     rack-test (0.6.3)
       rack (>= 1.0)
@@ -140,9 +148,12 @@ PLATFORMS
 DEPENDENCIES
   byebug
   config
+  jsonapi-authorization
+  jsonapi-resources
   knock!
   pg (~> 0.19.pre.pre)
   puma (~> 3.0)
+  pundit
   rails (~> 5.0.0, >= 5.0.0.1)
   tzinfo-data
 
