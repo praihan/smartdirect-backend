@@ -10,6 +10,9 @@ class UserResource < ApplicationResource
   # See models/user.rb
   attributes :oauth_provider, :oauth_id
 
+  # The ROOT directory of the user
+  has_one :link_directory
+
   def oauth_provider
     return identifiable_claim_parts[0] || '<unknown>'
   end

@@ -1,0 +1,2 @@
+class LinkDirectoryResource < ApplicationResource
+end

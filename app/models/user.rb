@@ -29,6 +29,6 @@ class User < ApplicationRecord
     # Over here, we create the ROOT directory for a user.
     # This directory doesn't really have a name so we choose a default
     create_link_directory path: Settings[:default_root_directory_name]
-    true
+    return true
   end
 end

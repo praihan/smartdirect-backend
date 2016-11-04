@@ -3,4 +3,5 @@ Rails.application.routes.draw do
   get 'health-check' => 'health_check#index'
 
   jsonapi_resources :users
+  jsonapi_resources :link_directories
 end

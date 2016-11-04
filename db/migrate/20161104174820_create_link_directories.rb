@@ -5,6 +5,8 @@ class CreateLinkDirectories < ActiveRecord::Migration[5.0]
       t.timestamps
     end
 
+    # Of course, we gotta index on path. We're going to be searching with it
+    # all the time!
     add_index :link_directories, :path, using: :btree
   end
 end
