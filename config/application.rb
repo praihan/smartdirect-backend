@@ -29,8 +29,8 @@ module SmartdirectApi
 
     # UUID's are awesome.
     # See http://www.mccartie.com/2015/10/20/default-uuid's-in-rails.html
-    config.generators do |g|
-      g.orm :active_record, primary_key_type: :uuid
-    end
+    # config.generators do |g|
+    #  g.orm :active_record, primary_key_type: :uuid
+    # end
   end
 end
