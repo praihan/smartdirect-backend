@@ -2,3 +2,4 @@ auth0:
   known_oauth_providers:
     - github
     - google-oauth2
+default_root_directory_name: __ROOT__

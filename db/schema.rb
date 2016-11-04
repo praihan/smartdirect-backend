@@ -15,17 +15,13 @@ ActiveRecord::Schema.define(version: 20161104175135) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
+  enable_extension "ltree"
 
   create_table "link_directories", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "parent_id"
-    t.integer  "lft",        null: false
-    t.integer  "rgt",        null: false
+    t.ltree    "path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["lft"], name: "index_link_directories_on_lft", using: :btree
-    t.index ["parent_id"], name: "index_link_directories_on_parent_id", using: :btree
-    t.index ["rgt"], name: "index_link_directories_on_rgt", using: :btree
+    t.index ["path"], name: "index_link_directories_on_path", using: :btree
   end
 
   create_table "links", force: :cascade do |t|

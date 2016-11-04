@@ -4,5 +4,5 @@ class LinkDirectory < ApplicationRecord
   # Deleting is recursive
   has_many :links, dependent: :destroy
 
-  acts_as_nested_set dependent: :destroy
+  ltree :path
 end

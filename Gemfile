@@ -32,8 +32,8 @@ gem 'jsonapi-resources'
 gem 'jsonapi-authorization'
 gem 'pundit'
 
-# Use awesome_nested_set for hierarchical structures
-gem 'awesome_nested_set'
+# Use Postgres ltree for hierarchical structures
+gem 'pg_ltree', '1.1.3'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
