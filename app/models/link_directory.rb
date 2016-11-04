@@ -1,6 +1,4 @@
 class LinkDirectory < ApplicationRecord
-  # Only a ROOT directory will have a user attached to it
-  belongs_to :user, optional: true
 
   # A directory can contains other directories as well as files
   # Deleting is recursive

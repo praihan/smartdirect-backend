@@ -8,8 +8,6 @@ class CreateLinkDirectories < ActiveRecord::Migration[5.0]
       t.integer :lft, :null => false, :index => true
       t.integer :rgt, :null => false, :index => true
 
-      t.belongs_to :user, index: true
-
       t.timestamps
     end
   end
