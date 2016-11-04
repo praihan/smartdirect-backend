@@ -1,4 +1,4 @@
-class LinkDirectory < ApplicationRecord
+class Directory < ApplicationRecord
 
   # A directory can contains other directories as well as files
   # Deleting is recursive

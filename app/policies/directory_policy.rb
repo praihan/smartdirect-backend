@@ -1,4 +1,4 @@
-class LinkDirectoryPolicy < ApplicationPolicy
+class DirectoryPolicy < ApplicationPolicy
   class Scope < Scope
     attr_reader :user, :scope
 

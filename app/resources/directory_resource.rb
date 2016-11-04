@@ -1,0 +1,2 @@
+class DirectoryResource < ApplicationResource
+end

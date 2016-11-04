@@ -17,23 +17,23 @@ ActiveRecord::Schema.define(version: 20161104175135) do
   enable_extension "uuid-ossp"
   enable_extension "ltree"
 
-  create_table "link_directories", force: :cascade do |t|
+  create_table "directories", force: :cascade do |t|
     t.ltree    "path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["path"], name: "index_link_directories_on_path", using: :btree
+    t.index ["path"], name: "index_directories_on_path", using: :btree
   end
 
   create_table "links", force: :cascade do |t|
-    t.integer  "link_directory_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-    t.index ["link_directory_id"], name: "index_links_on_link_directory_id", using: :btree
+    t.integer  "directory_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.index ["directory_id"], name: "index_links_on_directory_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
     t.string   "identifiable_claim"
-    t.integer  "link_directory_id"
+    t.integer  "directory_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
     t.index ["identifiable_claim"], name: "index_users_on_identifiable_claim", unique: true, using: :btree

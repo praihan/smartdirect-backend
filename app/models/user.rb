@@ -20,15 +20,15 @@ class User < ApplicationRecord
   # We use belongs_to because we want the user to store the
   # foreign key to the directory. The directory has no idea
   # if it is owned or not.
-  belongs_to :link_directory
-  before_create :create_default_link_directory
+  belongs_to :directory
+  before_create :create_default_directory
 
   private
 
-  def create_default_link_directory
+  def create_default_directory
     # Over here, we create the ROOT directory for a user.
     # This directory doesn't really have a name so we choose a default
-    create_link_directory path: Settings[:default_root_directory_name]
+    create_directory path: Settings[:default_root_directory_name]
     return true
   end
 end

@@ -11,7 +11,7 @@ class UserResource < ApplicationResource
   attributes :oauth_provider, :oauth_id
 
   # The ROOT directory of the user
-  has_one :link_directory
+  has_one :directory
 
   def oauth_provider
     return identifiable_claim_parts[0] || '<unknown>'
