@@ -28,7 +28,9 @@ module SmartdirectApi
     config.api_only = true
 
     # UUID's are awesome.
-    # See https://github.com/rails/rails/pull/21762
-    config.active_record.primary_key = :uuid
+    # See http://www.mccartie.com/2015/10/20/default-uuid's-in-rails.html
+    config.generators do |g|
+      g.orm :active_record, primary_key_type: :uuid
+    end
   end
 end

@@ -15,4 +15,7 @@ class User < ApplicationRecord
     # Since we provide no sign up mechanism, users are created on the fly
     return self.find_or_create_by identifiable_claim: sub_claim
   end
+
+  # This is the ROOT directory that belongs to the user
+  has_one :link_directory
 end
