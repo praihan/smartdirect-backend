@@ -20,16 +20,10 @@ class User < ApplicationRecord
   # are linked to the LinkSystem instead of the User directory for ease
   # of moving data around later.
   has_one :link_system
+  # When a new user is created, we need to also create a build system for them
   before_create :build_link_system
 
   # The user (after one step of redirection) ultimately owns its LinkSystem's
   # ROOT directory.
   has_one :directory, through: :link_system
-
-  private
-
-  def create_default_link_system
-    # When a new user is created, they need a link system attached to them
-    build_link_system
-  end
 end
