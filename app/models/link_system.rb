@@ -14,4 +14,7 @@ class LinkSystem < ApplicationRecord
     build_directory path: Settings[:default_root_directory_name]
     return true
   end
+
+  # If the LinkSystem doesn't have a Directory, it's useless
+  validates_associated :directory
 end

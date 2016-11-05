@@ -12,4 +12,8 @@ class Directory < ApplicationRecord
   # characters. Also, avoids the complexity of nested structures in our code
   # (PG can do it for us :)
   ltree :path
+
+  # See https://www.postgresql.org/docs/9.1/static/ltree.html
+  # ltree only accepts alphanumeric characters and underscore.
+  validates_format_of :path, with: /\A[A-Za-z0-9_]+\z/
 end

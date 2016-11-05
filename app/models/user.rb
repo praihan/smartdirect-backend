@@ -26,4 +26,7 @@ class User < ApplicationRecord
   # The user (after one step of redirection) ultimately owns its LinkSystem's
   # ROOT directory.
   has_one :directory, through: :link_system
+
+  # If the user doesn't have a LinkSystem, they can't do anything
+  validates_associated  :link_system
 end
