@@ -6,8 +6,6 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       # however, the primary key is still :id
       t.string :identifiable_claim
 
-      t.belongs_to :directory, index: false
-
       t.timestamps
     end
 

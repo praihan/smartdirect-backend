@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161104175135) do
+ActiveRecord::Schema.define(version: 20161105012917) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -18,10 +18,19 @@ ActiveRecord::Schema.define(version: 20161104175135) do
   enable_extension "ltree"
 
   create_table "directories", force: :cascade do |t|
+    t.integer  "link_system_id"
     t.ltree    "path"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["link_system_id"], name: "index_directories_on_link_system_id", using: :btree
+    t.index ["path"], name: "index_directories_on_path", using: :btree
+  end
+
+  create_table "link_systems", force: :cascade do |t|
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["path"], name: "index_directories_on_path", using: :btree
+    t.index ["user_id"], name: "index_link_systems_on_user_id", using: :btree
   end
 
   create_table "links", force: :cascade do |t|
@@ -33,7 +42,6 @@ ActiveRecord::Schema.define(version: 20161104175135) do
 
   create_table "users", force: :cascade do |t|
     t.string   "identifiable_claim"
-    t.integer  "directory_id"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
     t.index ["identifiable_claim"], name: "index_users_on_identifiable_claim", unique: true, using: :btree

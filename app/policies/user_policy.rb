@@ -8,7 +8,7 @@ class UserPolicy < ApplicationPolicy
     end
 
     def resolve
-      return scope.where(id: user.id)
+      return scope
     end
   end
 

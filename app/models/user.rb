@@ -16,19 +16,20 @@ class User < ApplicationRecord
     return self.find_or_create_by identifiable_claim: sub_claim
   end
 
-  # This is the ROOT directory that belongs to the user.
-  # We use belongs_to because we want the user to store the
-  # foreign key to the directory. The directory has no idea
-  # if it is owned or not.
-  belongs_to :directory
-  before_create :create_default_directory
+  # This is the LinkSystem attached to the user. Directories and files
+  # are linked to the LinkSystem instead of the User directory for ease
+  # of moving data around later.
+  has_one :link_system
+  before_create :build_link_system
+
+  # The user (after one step of redirection) ultimately owns its LinkSystem's
+  # ROOT directory.
+  has_one :directory, through: :link_system
 
   private
 
-  def create_default_directory
-    # Over here, we create the ROOT directory for a user.
-    # This directory doesn't really have a name so we choose a default
-    create_directory path: Settings[:default_root_directory_name]
-    return true
+  def create_default_link_system
+    # When a new user is created, they need a link system attached to them
+    build_link_system
   end
 end
