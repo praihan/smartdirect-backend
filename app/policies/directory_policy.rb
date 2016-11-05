@@ -8,7 +8,7 @@ class DirectoryPolicy < ApplicationPolicy
     end
 
     def resolve
-      scope
+      scope.where(id: user.link_system.id)
     end
   end
 
