@@ -17,6 +17,8 @@ class Directory < ApplicationRecord
   validates_format_of :path, with: /#{Settings[:postgres][:ltree_label_regex]}/
   # We can't do anything with an orphaned directory
   validates_presence_of :link_system
+  # A user must have unique directory paths
+  validates_uniqueness_of :path, :scope => [:link_system_id]
 
   def full_path
     # Since PG's ltree uses '.' as separators, we have to change

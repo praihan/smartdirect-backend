@@ -22,8 +22,8 @@ ActiveRecord::Schema.define(version: 20161105012917) do
     t.ltree    "path"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.index ["link_system_id", "path"], name: "index_directories_on_link_system_id_and_path", using: :btree
     t.index ["link_system_id"], name: "index_directories_on_link_system_id", using: :btree
-    t.index ["path"], name: "index_directories_on_path", using: :btree
   end
 
   create_table "link_systems", force: :cascade do |t|

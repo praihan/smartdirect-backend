@@ -7,7 +7,8 @@ class CreateDirectories < ActiveRecord::Migration[5.0]
     end
 
     # Of course, we gotta index on path. We're going to be searching with it
-    # all the time!
-    add_index :directories, :path, using: :btree
+    # all the time! Since we will only really search in conjunction with a user's
+    # LinkSystem, it's nice to index that too.
+    add_index :directories, [:link_system_id, :path], using: :btree
   end
 end
