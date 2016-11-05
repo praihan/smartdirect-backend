@@ -4,10 +4,4 @@ class DirectoryResource < ApplicationResource
   has_one :user
 
   attributes :full_path
-
-  before_create :sanitize_create_and_update_params
-
-  def sanitize_create_and_update_params
-    return
-  end
 end

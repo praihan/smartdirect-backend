@@ -29,4 +29,25 @@ class User < ApplicationRecord
 
   # If the user doesn't have a LinkSystem, they can't do anything
   validates_associated  :link_system
+
+  # This is the first part of the claim. (e.g. 'github', 'google-oauth2')
+  def oauth_provider
+    return identifiable_claim_parts[0] || '<unknown>'
+  end
+
+  # This is the second part of the claim. It is the unique ID for the user that
+  # comes from the oauth_provider
+  def oauth_id
+    return identifiable_claim_parts[1] || '<unknown>'
+  end
+
+  private
+
+  def identifiable_claim_parts
+    parts = identifiable_claim.split('|')
+    # We expect it in the format specified in models/user.rb
+    # Otherwise don't provide any information
+    return parts if parts.length == 2
+    return []
+  end
 end

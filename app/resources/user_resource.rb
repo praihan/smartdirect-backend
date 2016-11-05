@@ -12,22 +12,4 @@ class UserResource < ApplicationResource
 
   # The ROOT directory of the user
   has_one :directory
-
-  def oauth_provider
-    return identifiable_claim_parts[0] || '<unknown>'
-  end
-
-  def oauth_id
-    return identifiable_claim_parts[1] || '<unknown>'
-  end
-
-  private
-
-  def identifiable_claim_parts
-    parts = @model.identifiable_claim.split('|')
-    # We expect it in the format specified in models/user.rb
-    # Otherwise don't provide any information
-    return parts if parts.length == 2
-    return []
-  end
 end
