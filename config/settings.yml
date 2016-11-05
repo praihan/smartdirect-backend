@@ -3,3 +3,7 @@ auth0:
     - github
     - google-oauth2
 default_root_directory_name: __ROOT__
+postgres:
+  # See https://www.postgresql.org/docs/9.1/static/ltree.html
+  # ltree only accepts alphanumeric characters and underscore.
+  ltree_label_regex: \A([A-Za-z0-9_]+\.)*[A-Za-z0-9_]+\z

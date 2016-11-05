@@ -1,6 +1,6 @@
 class ApplicationResourceController < ApplicationController
   include JSONAPI::ActsAsResourceController
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  # rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   private
 

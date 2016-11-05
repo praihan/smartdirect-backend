@@ -12,11 +12,18 @@ class DirectoryPolicy < ApplicationPolicy
     end
   end
 
+  # A user should be allowed to see all their directories
   def index?
     return true
   end
 
+  # A user should be allowed to see a single directory too
   def show?
+    return true
+  end
+
+  # A user should be allowed to create a directory too
+  def create?
     return true
   end
 end
