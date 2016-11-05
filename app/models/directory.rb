@@ -15,6 +15,8 @@ class Directory < ApplicationRecord
 
   # See settings.yml for explanation
   validates_format_of :path, with: /#{Settings[:postgres][:ltree_label_regex]}/
+  # We can't do anything with an orphaned directory
+  validates_presence_of :link_system
 
   def full_path
     # Since PG's ltree uses '.' as separators, we have to change
@@ -28,9 +30,17 @@ class Directory < ApplicationRecord
 
   def full_path=(val)
     val = val.to_s
-    # TODO: Make sure there aren't any '.'
+    # We won't allow dots. PG's ltree uses them as separators.
+    raise Pundit::NotAuthorizedError if val.include? '.'
+
     root_name = Settings[:default_root_directory_name]
-    postgres_ltree_style_path = val.gsub '/', '.'
-    self.path = "#{root_name}.#{postgres_ltree_style_path}"
+    pg_ltree_label_regex = /#{Settings[:postgres][:ltree_label_regex]}/
+
+    # This is what the path would look like in the database
+    proposed_path = "#{root_name}.#{val.gsub '/', '.'}"
+
+    # We should immediately throw and error if validation is going to fail later anyways
+    raise Pundit::NotAuthorizedError unless proposed_path =~ pg_ltree_label_regex
+    self.path = proposed_path
   end
 end
