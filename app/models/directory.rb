@@ -27,12 +27,13 @@ class Directory < ApplicationRecord
     # an implementation detail.
     root_name = Settings[:default_root_directory_name]
     canonical_full_path = path.gsub '.', '/'
-    return canonical_full_path[root_name.length + 1 .. -1]
+    return canonical_full_path[root_name.length + 1 .. -1] || ''
   end
 
   def full_path=(val)
     val = val.to_s
     # We won't allow dots. PG's ltree uses them as separators.
+    # TODO: Use different class for exception
     raise Pundit::NotAuthorizedError if val.include? '.'
 
     root_name = Settings[:default_root_directory_name]
