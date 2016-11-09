@@ -1,19 +1,36 @@
 class User < ApplicationRecord
   def self.from_token_payload(payload)
+    # Sanity checks:
+    # We require scopes: openid email name
+    return nil unless %w(iss sub aud email name).all? { |field| payload[field].is_a? String }
+    return nil unless %w(exp iat).all? { |field| payload[field].is_a? Integer }
+
     # This is expected to be in the format
     # "#{provider}|#{user_id}"
     sub_claim = payload['sub']
-
-    # Just to be safe...
-    return nil unless sub_claim.is_a? String
 
     # Only accept recognized providers, e.g. 'github|', 'google-oauth2|'
     # Take note of the pipe (|) that separates the provider from their ID
     known_providers = Settings[:auth0][:known_oauth_providers]
     return nil if known_providers.none? { |provider| sub_claim.start_with? "#{provider}|" }
 
-    # Since we provide no sign up mechanism, users are created on the fly
-    return self.find_or_create_by identifiable_claim: sub_claim
+    # Since we provide no sign up mechanism ourselves, users are created on the fly
+    user = self.find_or_create_by identifiable_claim: sub_claim do |user|
+      # NOTE: This is only called when creating a new user
+      # The code works without this but then we have an extra query
+      # and created_at no longer matches updated_at
+      user.name = payload['name']
+      user.email = payload['email']
+    end
+
+    # If these fields have changed, then update them in the database as well
+    # If we've just created a new user right, that's okay. This will be a no-op
+    user.name = payload['name']
+    user.email = payload['email']
+    user.save if user.changed?
+
+    # And finally, return the user back
+    return user
   end
 
   # This is the LinkSystem attached to the user. Directories and files

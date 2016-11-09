@@ -6,6 +6,11 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       # however, the primary key is still :id
       t.string :identifiable_claim
 
+      # these are two columns that should *never* be used to identify a user.
+      # They are simply additional information
+      t.string :email
+      t.string :name
+
       t.timestamps
     end
 

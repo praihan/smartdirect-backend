@@ -42,6 +42,8 @@ ActiveRecord::Schema.define(version: 20161105012917) do
 
   create_table "users", force: :cascade do |t|
     t.string   "identifiable_claim"
+    t.string   "email"
+    t.string   "name"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
     t.index ["identifiable_claim"], name: "index_users_on_identifiable_claim", unique: true, using: :btree
