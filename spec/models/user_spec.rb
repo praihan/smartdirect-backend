@@ -25,17 +25,24 @@ end
 
 RSpec.describe User, type: :model do
 
-  it 'should have a LinkSystem attached on creation' do
+  it 'should be able to create a simple user' do
     user = create_default_user
     expect(user.valid?).to be_truthy
     expect(user.errors).to match_array([])
+  end
+
+  it 'should correctly report \'oauth_provider\' and \'oauth_id\'' do
+    user = create_default_user
+    expect("#{user.oauth_provider}|#{user.oauth_id}").to eq(user.identifiable_claim)
+  end
+
+  it 'should have a LinkSystem attached on creation' do
+    user = create_default_user
     expect(user.link_system).to be_kind_of(LinkSystem)
   end
 
   it 'should have a root Directory attached on creation' do
     user = create_default_user
-    expect(user.valid?).to be_truthy
-    expect(user.errors).to match_array([])
     expect(user.directory).to be_kind_of(Directory)
     expect(user.directory.root?).to be_truthy
     expect(user.directory.name).to eq('')
