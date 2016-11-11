@@ -7,8 +7,10 @@ class User < ApplicationRecord
     begin
       # Sanity checks:
       # We require scopes: openid email name
-      return nil unless %w(iss sub aud email name).all? { |field| payload[field].is_a? String }
-      return nil unless %w(exp iat).all? { |field| payload[field].is_a? Integer }
+      unless %w(iss sub aud email name).all? { |field| payload[field].is_a? String } &&
+          %w(exp iat).all? { |field| payload[field].is_a? Integer }
+        raise Errors::UserError.new 'Missing field(s) in payload'
+      end
 
       # This is expected to be in the format
       # "#{provider}|#{user_id}"
@@ -17,7 +19,9 @@ class User < ApplicationRecord
       # Only accept recognized providers, e.g. 'github|', 'google-oauth2|'
       # Take note of the pipe (|) that separates the provider from their ID
       known_providers = Settings[:auth0][:known_oauth_providers]
-      return nil if known_providers.none? { |provider| sub_claim.start_with? "#{provider}|" }
+      if known_providers.none? { |provider| sub_claim.start_with? "#{provider}|" }
+        raise Errors::UserError.new "Unknown provider for claim '#{sub_claim}'"
+      end
 
       # Since we provide no sign up mechanism ourselves, users are created on the fly
       user = self.find_or_create_by identifiable_claim: sub_claim do |user|
