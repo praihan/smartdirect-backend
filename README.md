@@ -1,7 +1,22 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Testing
+
+Testing is done with RSpec. You will need to set up a PostgreSQL database on `localhost` for testing.
+You will need to do the following in `psql`:
+```SQL
+CREATE USER <username>;
+CREATE DATABASE <database>;
+
+REVOKE CONNECT ON DATABASE <database> FROM PUBLIC;
+GRANT CONNECT ON DATABASE <database> TO username;
+```
+Please see [settings/test.yml](/config/settings/test.yml) to see/modify the connection settings
+used when testing.
+
+Make sure to run `bin/rails db:migrate RAILS_ENV=test` afterwards!
+
+***
 
 Things you may want to cover:
 
