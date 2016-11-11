@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 # noinspection RubyStringKeysInHashInspection
-default_payload = {
+def create_default_payload
+  return {
     'iss' => '',
     'aud' => '',
     'exp' => 1234,
@@ -9,10 +10,36 @@ default_payload = {
     'email' => 'JohnSmith@example.com',
     'name' => 'John Smith',
     'sub' => 'github|1234',
-}
+  }
+end
+default_payload = create_default_payload
+
+def create_default_user
+  default_payload = create_default_payload
+  return User.create(
+      identifiable_claim: default_payload['sub'],
+      name: default_payload['name'],
+      email: default_payload['email'],
+  )
+end
 
 RSpec.describe User, type: :model do
 
+  it 'should have a LinkSystem attached on creation' do
+    user = create_default_user
+    expect(user.valid?).to be_truthy
+    expect(user.errors).to match_array([])
+    expect(user.link_system).to be_kind_of(LinkSystem)
+  end
+
+  it 'should have a root Directory attached on creation' do
+    user = create_default_user
+    expect(user.valid?).to be_truthy
+    expect(user.errors).to match_array([])
+    expect(user.directory).to be_kind_of(Directory)
+    expect(user.directory.root?).to be_truthy
+    expect(user.directory.name).to eq('')
+  end
 
   # Authencation tests
 
