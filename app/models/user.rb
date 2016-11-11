@@ -69,7 +69,7 @@ class User < ApplicationRecord
   has_one :directory, through: :link_system
 
   # If the user doesn't have a LinkSystem, they can't do anything
-  validates_associated  :link_system
+  validates_associated :link_system
 
   # This is the first part of the claim. (e.g. 'github', 'google-oauth2')
   def oauth_provider
