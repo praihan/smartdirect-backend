@@ -8,42 +8,36 @@ class Directory < ApplicationRecord
   # Get the current user through the owning LinkSystem
   delegate :user, to: :link_system
 
-  # We can use Postgres' ltree here. Very fast, but limited to alphanumeric
-  # characters. Also, avoids the complexity of nested structures in our code
-  # (PG can do it for us :)
-  ltree :path
-
-  # See settings.yml for explanation
-  validates_format_of :path, with: /#{Settings[:postgres][:ltree_label_regex]}/
+  # Validation for name is a little complex...
+  validate :_validate_name
   # We can't do anything with an orphaned directory
   validates_presence_of :link_system
-  # A user must have unique directory paths
-  validates_uniqueness_of :path, :scope => [:link_system_id]
 
-  def full_path
-    # Since PG's ltree uses '.' as separators, we have to change
-    # them to '/' because that's how everyone else does it.
-    # Also, strip the ROOT directory from the beginning, that's just
-    # an implementation detail.
-    root_name = Settings[:default_root_directory_name]
-    canonical_full_path = path.gsub '.', '/'
-    return canonical_full_path[root_name.length + 1 .. -1] || ''
-  end
+  # A directory is modeled in the db using a closure table
+  has_closure_tree(
+      name_column: 'name', order: 'name',
+      dependent: :destroy,
+      parent_column_name: 'parent_id',
+      with_advisory_lock: true
+  )
 
-  def full_path=(val)
-    val = val.to_s
-    # We won't allow dots. PG's ltree uses them as separators.
-    # TODO: Use different class for exception
-    raise Pundit::NotAuthorizedError if val.include? '.'
+  private
 
-    root_name = Settings[:default_root_directory_name]
-    pg_ltree_label_regex = /#{Settings[:postgres][:ltree_label_regex]}/
-
-    # This is what the path would look like in the database
-    proposed_path = "#{root_name}.#{val.gsub '/', '.'}"
-
-    # We should immediately throw and error if validation is going to fail later anyways
-    raise Pundit::NotAuthorizedError unless proposed_path =~ pg_ltree_label_regex
-    self.path = proposed_path
+  def _validate_name
+    if root?
+      # Root nodes get a pass as long as name is empty string.
+      # A root node is owned by a LinkSystem directory and has
+      # no actual meaning to the user.
+      if name != ''
+        errors.add(:name, 'must be nil for root directory')
+      end
+      return
+    end
+    # Non-root nodes have to pass the name regex
+    valid_directory_name_regex = /#{Settings[:app][:valid_directory_name_regex]}/
+    unless valid_directory_name_regex =~ name
+      # It's okay to be vague
+      errors.add(:name, 'must be a valid directory name')
+    end
   end
 end

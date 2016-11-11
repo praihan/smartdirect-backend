@@ -10,20 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161105012917) do
+ActiveRecord::Schema.define(version: 20161111085743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
-  enable_extension "ltree"
 
   create_table "directories", force: :cascade do |t|
     t.integer  "link_system_id"
-    t.ltree    "path"
+    t.string   "name"
+    t.integer  "parent_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
-    t.index ["link_system_id", "path"], name: "index_directories_on_link_system_id_and_path", using: :btree
+    t.index ["link_system_id", "name"], name: "index_directories_on_link_system_id_and_name", using: :btree
     t.index ["link_system_id"], name: "index_directories_on_link_system_id", using: :btree
+    t.index ["name"], name: "index_directories_on_name", unique: true, using: :btree
+  end
+
+  create_table "directory_hierarchies", id: false, force: :cascade do |t|
+    t.integer "ancestor_id",   null: false
+    t.integer "descendant_id", null: false
+    t.integer "generations",   null: false
+    t.index ["ancestor_id", "descendant_id", "generations"], name: "directory_anc_desc_idx", unique: true, using: :btree
+    t.index ["descendant_id"], name: "directory_desc_idx", using: :btree
   end
 
   create_table "link_systems", force: :cascade do |t|

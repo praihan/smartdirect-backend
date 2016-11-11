@@ -1,6 +1,8 @@
 # Every element with (Environment) means that they must be specified by the environment
 
-default_root_directory_name: __ROOT__
+app:
+  valid_directory_name_regex: \A[A-Za-z0-9_\-\.\+=]+\z
+  root_directory_name: __ROOT__
 
 auth0:
   client_id: # (Environment) ID of the auth0 client
@@ -16,7 +18,3 @@ postgres:
   password: # (Environment) password to use
   database: # (Environment) the database name to connect to
   port: # (Environment) the port on 'host' on which to connect
-
-  # See https://www.postgresql.org/docs/9.1/static/ltree.html
-  # ltree only accepts alphanumeric characters and underscore.
-  ltree_label_regex: \A([A-Za-z0-9_]+\.)*[A-Za-z0-9_]+\z
