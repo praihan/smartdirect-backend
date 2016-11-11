@@ -4,12 +4,18 @@ class User < ApplicationRecord
     # will cause Knock to fail authentication even though that might not be the underlying
     # cause. This way we'll at least get a log. The requester will still get a vague "invalid token"
     # message.
+    # NOTE: This method should never return nil. If a user cannot be found, throw a UserError
     begin
       # Sanity checks:
       # We require scopes: openid email name
       unless %w(iss sub aud email name).all? { |field| payload[field].is_a? String } &&
           %w(exp iat).all? { |field| payload[field].is_a? Integer }
-        raise Errors::UserError.new 'Missing field(s) in payload'
+        raise Errors::UserError.new(
+            group: 'Authentication',
+            message: 'Missing field(s) in JWT payload',
+            severity: Errors::CRITICAL,
+            userdata: { :payload => payload }
+        )
       end
 
       # This is expected to be in the format
@@ -20,7 +26,12 @@ class User < ApplicationRecord
       # Take note of the pipe (|) that separates the provider from their ID
       known_providers = Settings[:auth0][:known_oauth_providers]
       if known_providers.none? { |provider| sub_claim.start_with? "#{provider}|" }
-        raise Errors::UserError.new "Unknown provider for claim '#{sub_claim}'"
+        raise Errors::UserError.new(
+            group: 'Authentication',
+            message: "Unknown provider for JWT 'sub' claim '#{sub_claim}'",
+            severity: Errors::CRITICAL,
+            userdata: { :payload => payload }
+        )
       end
 
       # Since we provide no sign up mechanism ourselves, users are created on the fly
