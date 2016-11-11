@@ -14,7 +14,6 @@ ActiveRecord::Schema.define(version: 20161111085743) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "uuid-ossp"
 
   create_table "directories", force: :cascade do |t|
     t.integer  "link_system_id"

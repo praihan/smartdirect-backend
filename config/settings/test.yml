@@ -1,0 +1,10 @@
+auth0:
+  client_id: LbGid9glzIogma9BHpJYvy4svR5A1lGa
+  client_secret: n0k5MnqEGTKTLmj2OSgKFwmHjV3S1gh85IScxQpCgCnzR8gtQmMiaRvv7jEAgBVA
+
+postgres:
+  host: localhost
+  username: smartdirect
+  password: smartdirect
+  database: smartdirect_test
+  port: 5432
