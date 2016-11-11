@@ -32,8 +32,8 @@ gem 'jsonapi-resources'
 gem 'jsonapi-authorization'
 gem 'pundit'
 
-# Use Postgres ltree for hierarchical structures
-gem 'pg_ltree', '1.1.3'
+# Use Closure tables for hierarchical structures
+gem 'closure_tree'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
