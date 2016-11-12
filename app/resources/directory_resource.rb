@@ -3,18 +3,23 @@ class DirectoryResource < ApplicationResource
   # See the model, for how this is retrieved
   has_one :user
 
+  # The directory's name (not full path)
   attributes :name
+  # Readonly depth
   attributes :depth
 
-  # attributes :parent_id
+  # Tree relations
   has_one :parent, class_name: 'Directory'
   has_many :children, class_name: 'Directory'
 
+  # Timestamps (readonly)
+  attributes :created_at, :updated_at
+
   def self.updatable_fields(context)
-    return super - [:depth, :children]
+    return super - [:depth, :children, :created_at, :updated_at]
   end
   def self.creatable_fields(context)
-    return super - [:depth, :children]
+    return super - [:depth, :children, :created_at, :updated_at]
   end
 
 
