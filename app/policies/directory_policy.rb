@@ -17,13 +17,18 @@ class DirectoryPolicy < ApplicationPolicy
     return true
   end
 
-  # A user should be allowed to see a single directory too
+  # A user should be allowed to see a single directory
   def show?
     return true
   end
 
-  # A user should be allowed to create a directory too
+  # A user should be allowed to create a directory
   def create?
+    return true
+  end
+
+  # A user should allowed to update a directory
+  def update?
     return true
   end
 end

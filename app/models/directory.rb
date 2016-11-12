@@ -12,6 +12,9 @@ class Directory < ApplicationRecord
   validate :_validate_name
   # We can't do anything with an orphaned directory
   validates_presence_of :link_system
+  # We can't have a directory that belongs to user A
+  # but with a parent directory that belongs to user B
+  validate :_validate_same_user_as_parent
 
   # A directory is modeled in the db using a closure table
   has_closure_tree(
@@ -29,7 +32,7 @@ class Directory < ApplicationRecord
       # A root node is owned by a LinkSystem directory and has
       # no actual meaning to the user.
       if name != ''
-        errors.add(:name, 'must be nil for root directory')
+        errors.add(:name, 'value must be nil for root directory')
       end
       return
     end
@@ -37,7 +40,13 @@ class Directory < ApplicationRecord
     valid_directory_name_regex = /#{Settings[:app][:valid_directory_name_regex]}/
     unless valid_directory_name_regex =~ name
       # It's okay to be vague
-      errors.add(:name, 'must be a valid directory name')
+      errors.add(:name, 'value must be a valid directory name')
+    end
+  end
+
+  def _validate_same_user_as_parent
+    if parent != nil && parent.link_system_id != link_system_id
+      errors.add(:parent, 'directory must have a parent that is part of the same user\'s tree')
     end
   end
 end
