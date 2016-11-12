@@ -1,3 +1,3 @@
 module Errors
-  class UserError < BaseError; end
+  class UserError < ApplicationError; end
 end

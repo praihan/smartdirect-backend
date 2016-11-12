@@ -1,5 +1,5 @@
 module Errors
-  class BaseError < StandardError
+  module ActsAsError
     attr_reader :action, :severity, :userdata
 
     def initialize(action:, message:, severity:, userdata: nil)
@@ -9,13 +9,4 @@ module Errors
       @userdata = userdata
     end
   end
-
-  module Severity
-    CRITICAL = 'critical'
-    MAJOR = 'major'
-    MINOR = 'minor'
-  end
-
-  # Make the severities under Errors:: as well
-  include Severity
 end
