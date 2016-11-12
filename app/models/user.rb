@@ -11,7 +11,7 @@ class User < ApplicationRecord
       unless %w(iss sub aud email name).all? { |field| payload[field].is_a? String } &&
           %w(exp iat).all? { |field| payload[field].is_a? Integer }
         raise Errors::UserError.new(
-            group: 'Authentication',
+            action: 'Authenticate User',
             message: 'Missing field(s) in JWT payload',
             severity: Errors::CRITICAL,
             userdata: { :payload => payload }
@@ -27,7 +27,7 @@ class User < ApplicationRecord
       known_providers = Settings[:auth0][:known_oauth_providers]
       if known_providers.none? { |provider| sub_claim.start_with? "#{provider}|" }
         raise Errors::UserError.new(
-            group: 'Authentication',
+            action: 'Authenticate User',
             message: "Unknown provider for JWT 'sub' claim '#{sub_claim}'",
             severity: Errors::CRITICAL,
             userdata: { :payload => payload }

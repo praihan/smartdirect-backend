@@ -1,10 +1,10 @@
 module Errors
   class BaseError < StandardError
-    attr_reader :group, :severity, :userdata
+    attr_reader :action, :severity, :userdata
 
-    def initialize(group:, message:, severity:, userdata: nil)
+    def initialize(action:, message:, severity:, userdata: nil)
       super message
-      @group = group
+      @action = action
       @severity = severity
       @userdata = userdata
     end
