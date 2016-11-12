@@ -40,7 +40,9 @@ class DirectoryResource < ApplicationResource
       raise Errors::ResourceError.new(
           action: "#{action.camelcase} DirectoryResource",
           message: "Cannot find parent directory with #{parent_id == nil ? 'no id' : "id '#{parent_id}'"}",
-          severity: Errors::MINOR,
+          severity: Errors::Severity::MINOR,
+          code: JSONAPI::VALIDATION_ERROR,
+          status: :bad_request
       )
     end
     # Make sure that the user that is creating is the owner. But we only need to do this
