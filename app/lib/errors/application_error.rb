@@ -1,5 +1,5 @@
 module Errors
   class ApplicationError < RuntimeError
-    include ActsAsError
+    include Errors::ActsAsError
   end
 end
