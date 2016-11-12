@@ -40,6 +40,8 @@ group :development, :test do
   gem 'byebug', platform: :mri
   # RSpec for testing
   gem 'rspec-rails', '~> 3.5'
+  # Backtrace SQL queries back to app code
+  gem 'active_record_query_trace'
 end
 
 group :development do
