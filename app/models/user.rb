@@ -24,7 +24,7 @@ class User < ApplicationRecord
 
       # Only accept recognized providers, e.g. 'github|', 'google-oauth2|'
       # Take note of the pipe (|) that separates the provider from their ID
-      known_providers = Settings[:auth0][:known_oauth_providers]
+      known_providers = Settings[:jwt][:known_oauth_providers]
       if known_providers.none? { |provider| sub_claim.start_with? "#{provider}|" }
         raise Errors::UserError.new(
             action: 'Authenticate User',

@@ -25,8 +25,8 @@ module RSpecHelpers
           'email' => email,
           'name' => name,
 
-          'iss' => Settings[:auth0][:issuer],
-          'aud' => Settings[:auth0][:client_id],
+          'iss' => Settings[:jwt][:issuer],
+          'aud' => Settings[:jwt][:client_id],
 
           'exp' => (Time.now + expires_in).to_i,
           'iat' => issued_at.to_i,

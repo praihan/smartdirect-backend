@@ -4,7 +4,7 @@ app:
   valid_directory_name_regex: \A[A-Za-z0-9_\-\.\+=]+\z
   root_directory_name: __ROOT__
 
-auth0:
+jwt:
   client_id: # (Environment) ID of the auth0 client (the 'aud' claim)
   client_secret: # (Environment) secret of the auth0 client
   issuer: # (Environment) the issuer of the token (the 'iss' claim)
