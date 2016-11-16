@@ -9,15 +9,17 @@ class DirectoryResource < ApplicationResource
   # Tree relations
   has_one :parent, class_name: 'Directory'
   has_many :children, class_name: 'Directory'
+  has_many :descendants, class_name: 'Directory'
+  has_many :self_and_descendants, class_name: 'Directory'
 
   # Timestamps (readonly)
   attributes :created_at, :updated_at
 
   def self.updatable_fields(context)
-    return super - [:depth, :children, :created_at, :updated_at]
+    return super - [:children, :descendants, :self_and_descendants, :created_at, :updated_at]
   end
   def self.creatable_fields(context)
-    return super - [:depth, :children, :created_at, :updated_at]
+    return super - [:children, :descendants, :self_and_descendants, :created_at, :updated_at]
   end
 
   # Before we save, make sure we have our relationships properly set up
