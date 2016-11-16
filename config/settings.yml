@@ -5,8 +5,9 @@ app:
   root_directory_name: __ROOT__
 
 auth0:
-  client_id: # (Environment) ID of the auth0 client
+  client_id: # (Environment) ID of the auth0 client (the 'aud' claim)
   client_secret: # (Environment) secret of the auth0 client
+  issuer: # (Environment) the issuer of the token (the 'iss' claim)
 
   known_oauth_providers:
     - github
