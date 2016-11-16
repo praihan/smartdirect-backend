@@ -31,6 +31,12 @@ RSpec.describe User, type: :model do
     expect(user.errors).to match_array([])
   end
 
+  it 'should correctly report \'name\' and \'email\'' do
+    user = create_default_user
+    expect(user.name).to eq(default_payload['name'])
+    expect(user.email).to eq(default_payload['email'])
+  end
+
   it 'should correctly report \'oauth_provider\' and \'oauth_id\'' do
     user = create_default_user
     expect("#{user.oauth_provider}|#{user.oauth_id}").to eq(user.identifiable_claim)
