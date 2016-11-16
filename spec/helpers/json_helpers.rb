@@ -22,6 +22,20 @@ module RSpecHelpers
       return jwt_auth_headers token
     end
 
+    def auth_headers_from(identifiable_claim:, name:, email:)
+      token = Knock::AuthToken.new(payload: {
+          'sub' => identifiable_claim,
+          'email' => email,
+          'name' => name,
+
+          # 'iss' => '',
+          # 'aud' => '',
+          # 'exp' => 1234,
+          # 'iat' => 1234,
+      }).token
+      return jwt_auth_headers token
+    end
+
     def jwt_auth_headers(jwt)
       return {
           'Authorization' => "Bearer #{jwt}"
