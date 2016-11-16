@@ -5,8 +5,6 @@ class DirectoryResource < ApplicationResource
 
   # The directory's name (not full path)
   attributes :name
-  # Readonly depth
-  attributes :depth
 
   # Tree relations
   has_one :parent, class_name: 'Directory'
@@ -21,7 +19,6 @@ class DirectoryResource < ApplicationResource
   def self.creatable_fields(context)
     return super - [:depth, :children, :created_at, :updated_at]
   end
-
 
   # Before we save, make sure we have our relationships properly set up
   # TODO: whitelist exception, and use rescue_from
