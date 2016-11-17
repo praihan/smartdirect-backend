@@ -30,6 +30,15 @@ RSpec.describe User, type: :model do
       expect(user.directory.root?).to be_truthy
       expect(user.directory.name).to eq('')
     end
+    it 'does not share directory with another user' do
+      20.times do |n|
+        create_dummy_user identifiable_claim: "google-oauth2|#{n.to_s}"
+      end
+      all_users_directory_ids = User.all.map do |user|
+        user.directory.id
+      end
+      expect(all_users_directory_ids).to match_array(all_users_directory_ids.uniq)
+    end
   end
 
   context 'when validating jwt claims' do
