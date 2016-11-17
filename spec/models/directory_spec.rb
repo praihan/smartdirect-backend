@@ -45,6 +45,60 @@ RSpec.describe Directory, type: :model do
     end
   end
 
+  context 'when cyclical tree' do
+    it 'fails if cycling on own parent' do
+      dir1 = Directory.create(
+          name: 'a',
+          user_id: first_user.id,
+          parent: first_user.directory
+      )
+      dir2 = Directory.create(
+          name: 'b',
+          user_id: first_user.id,
+          parent: dir1
+      )
+      expect(dir1.valid?).to be true
+      expect(dir2.valid?).to be true
+
+      # Bad stuff
+      dir1.parent = dir2
+
+      expect(dir1.valid?).to be false
+      expect(dir1.errors.messages[:parent_id]).to(
+          match_array ['You cannot add an ancestor as a descendant']
+      )
+    end
+
+    it 'fails if cycling on grand parent' do
+      dir1 = Directory.create(
+          name: 'a',
+          user_id: first_user.id,
+          parent: first_user.directory
+      )
+      dir2 = Directory.create(
+          name: 'b',
+          user_id: first_user.id,
+          parent: dir1
+      )
+      dir3 = Directory.create(
+          name: 'c',
+          user_id: first_user.id,
+          parent: dir2
+      )
+      expect(dir1.valid?).to be true
+      expect(dir2.valid?).to be true
+      expect(dir3.valid?).to be true
+
+      # Bad stuff
+      dir1.parent = dir3
+
+      expect(dir1.valid?).to be false
+      expect(dir1.errors.messages[:parent_id]).to(
+          match_array ['You cannot add an ancestor as a descendant']
+      )
+    end
+  end
+
   context 'when mixing directories from two users' do
     it 'fails validation' do
       first_user_directory = Directory.create(
