@@ -18,13 +18,15 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
 require_relative 'helpers/json_helpers'
+require_relative 'helpers/user_helpers'
 
+# noinspection RubyResolve
 RSpec.configure do |config|
 
   # This is where we define our helpers
 
-  # noinspection RubyResolve
   config.include RSpecHelpers::JsonRequest, type: :request
+  config.include RSpecHelpers::UserModel
 
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

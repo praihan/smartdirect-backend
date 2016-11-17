@@ -1,54 +1,34 @@
 require 'rails_helper'
 
-# noinspection RubyStringKeysInHashInspection
-def create_default_payload
-  return {
-    'iss' => '',
-    'aud' => '',
-    'exp' => 1234,
-    'iat' => 1234,
-    'email' => 'JohnSmith@example.com',
-    'name' => 'John Smith',
-    'sub' => 'github|1234',
-  }
-end
-default_payload = create_default_payload
-
-def create_default_user
-  default_payload = create_default_payload
-  return User.create(
-      identifiable_claim: default_payload['sub'],
-      name: default_payload['name'],
-      email: default_payload['email'],
-  )
-end
-
 RSpec.describe User, type: :model do
 
+  let(:default_payload) { create_dummy_jwt_payload }
+  let(:default_user) { create_dummy_user }
+
   it 'should be able to create a simple user' do
-    user = create_default_user
+    user = default_user
     expect(user.valid?).to be_truthy
     expect(user.errors).to match_array([])
   end
 
   it 'should correctly report \'name\' and \'email\'' do
-    user = create_default_user
+    user = default_user
     expect(user.name).to eq(default_payload['name'])
     expect(user.email).to eq(default_payload['email'])
   end
 
   it 'should correctly report \'oauth_provider\' and \'oauth_id\'' do
-    user = create_default_user
+    user = default_user
     expect("#{user.oauth_provider}|#{user.oauth_id}").to eq(user.identifiable_claim)
   end
 
   it 'should have a LinkSystem attached on creation' do
-    user = create_default_user
+    user = default_user
     expect(user.link_system).to be_kind_of(LinkSystem)
   end
 
   it 'should have a root Directory attached on creation' do
-    user = create_default_user
+    user = default_user
     expect(user.directory).to be_kind_of(Directory)
     expect(user.directory.root?).to be_truthy
     expect(user.directory.name).to eq('')
