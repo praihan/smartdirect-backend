@@ -45,7 +45,7 @@ RSpec.describe Directory, type: :model do
     end
   end
 
-  context 'when we have a tree' do
+  context 'when we have a Directory tree' do
     let (:default_user) { first_user }
     let (:default_tree) {
       root = default_user.directory
@@ -74,6 +74,15 @@ RSpec.describe Directory, type: :model do
 
       root
     }
+
+    it 'can re-parent' do
+      child2aa = default_tree.find_by_path(%w(1a 2aa))
+      child1b = default_tree.find_by_path(%w(1b))
+
+      child1b.parent = child2aa
+
+      expect(child1b.valid?).to eq(true)
+    end
 
     context 'when two directories with same name' do
       it 'fails if they are siblings' do
