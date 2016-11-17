@@ -76,7 +76,6 @@ RSpec.describe Directory, type: :model do
     }
 
     context 'when two directories with same name' do
-
       it 'fails if they are siblings' do
         dir1 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree)
         dir2 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree)
@@ -96,6 +95,24 @@ RSpec.describe Directory, type: :model do
 
         expect(dir1.valid?).to eq(true)
         expect(dir2.valid?).to eq(true)
+      end
+
+      it 'fails if re-parenting to become siblings' do
+        dir1 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree.find_by_path(%w(1a)))
+        dir2 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree.find_by_path(%w(1b)))
+
+        expect(dir1.valid?).to eq(true)
+        expect(dir2.valid?).to eq(true)
+
+        # Bad stuff
+        dir2.parent = dir1.parent
+
+        expect(dir1.valid?).to eq(true)
+        expect(dir2.valid?).to eq(false)
+
+        expect(dir2.errors.messages[:name]).to(
+            match_array 'already have a sibling with the same value'
+        )
       end
     end
   end
