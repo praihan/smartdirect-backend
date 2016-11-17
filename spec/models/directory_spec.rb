@@ -4,7 +4,7 @@ RSpec.describe Directory, type: :model do
   let(:first_user) { create_dummy_user identifiable_claim: 'github|1234567890' }
   let(:second_user) { create_dummy_user identifiable_claim: 'github|0987654321' }
 
-  context 'when creating directory' do
+  context 'when creating Directory' do
 
     context 'no user' do
       it 'fails with proper error' do
@@ -18,13 +18,13 @@ RSpec.describe Directory, type: :model do
 
     context 'root Directory' do
       it 'fails if non-empty \'name\'' do
-        dir = Directory.create(
+        root_dir = Directory.create(
             name: 'non-empty',
             user_id: first_user.id,
             parent: nil
         )
-        expect(dir.valid?).to eq(false)
-        expect(dir.errors.messages[:name]).to(
+        expect(root_dir.valid?).to eq(false)
+        expect(root_dir.errors.messages[:name]).to(
             match_array ['value must be empty for root directory']
         )
       end
@@ -42,6 +42,22 @@ RSpec.describe Directory, type: :model do
             match_array ['value must be a valid directory name']
         )
       end
+    end
+  end
+
+  context 'when destroying Directory' do
+    it 'fails if root Directory' do
+      root_dir = Directory.create(
+          name: '',
+          user_id: first_user.id,
+          parent: nil
+      )
+      expect(root_dir.valid?).to eq(true)
+
+      # Try our best...
+      was_destroyed = root_dir.destroy
+
+      expect(was_destroyed).to be(false)
     end
   end
 
@@ -85,8 +101,7 @@ RSpec.describe Directory, type: :model do
       expect(child2aa.valid?).to eq(true)
     end
 
-    # LOL
-    it 'destroys its children' do
+    it 'destroys its descendants (cascading)' do
       child1a = default_tree.find_by_path(%w(1a))
 
       expect(default_tree.find_by_path(%w(1a 2aa 3aaa))).to_not eq(nil)
@@ -98,6 +113,10 @@ RSpec.describe Directory, type: :model do
       expect(default_tree.find_by_path(%w(1a 2aa))).to eq(nil)
       expect(default_tree.find_by_path(%w(1a 2aa 3aaa))).to eq(nil)
       expect(default_tree.find_by_path(%w(1a 2ab))).to eq(nil)
+    end
+
+    it 'fails to destroy root node (and its descendants)' do
+
     end
 
     context 'when two directories with same name' do
