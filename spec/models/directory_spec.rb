@@ -7,7 +7,7 @@ RSpec.describe Directory, type: :model do
   context 'when creating directory' do
 
     context 'no user' do
-      it 'fails if missing' do
+      it 'fails with proper error' do
         dir = Directory.create(name: '', parent: nil)
         expect(dir.valid?).to eq(false)
         expect(dir.errors.messages[:user]).to(
@@ -41,6 +41,61 @@ RSpec.describe Directory, type: :model do
         expect(dir.errors.messages[:name]).to(
             match_array ['value must be a valid directory name']
         )
+      end
+    end
+  end
+
+  context 'when we have a tree' do
+    let (:default_user) { first_user }
+    let (:default_tree) {
+      root = default_user.directory
+      user_id = root.user_id
+      #
+      #         ROOT
+      #       /  |  \
+      #     1a  1b  1c
+      #    /  \      |
+      #   2aa 2ab    2ca
+      #   |           |
+      #  3aaa        3caa
+      #                |
+      #              4caaa
+      child1a = Directory.create(name: '1a', user_id: user_id, parent: root)
+      child2aa = Directory.create(name: '2aa', user_id: user_id, parent: child1a)
+      child3aaa = Directory.create(name: '3aaa', user_id: user_id, parent: child1a)
+      child2ab = Directory.create(name: '2ab', user_id: user_id, parent: child1a)
+
+      child1b = Directory.create(name: '1b', user_id: user_id, parent: root)
+
+      child1c = Directory.create(name: '1c', user_id: user_id, parent: root)
+      child2ca = Directory.create(name: '2ca', user_id: user_id, parent: child1c)
+      child3caa = Directory.create(name: '3caa', user_id: user_id, parent: child2ca)
+      child4caaa = Directory.create(name: '4caaa', user_id: user_id, parent: child3caa)
+
+      root
+    }
+
+    context 'when two directories with same name' do
+
+      it 'fails if they are siblings' do
+        dir1 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree)
+        dir2 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree)
+
+        expect(dir1.valid?).to eq(true)
+        expect(dir2.valid?).to eq(false)
+
+        expect(dir2.errors.messages[:name]).to(
+            match_array 'already have a sibling with the same value'
+        )
+
+      end
+
+      it 'works if they are not siblings' do
+        dir1 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree.find_by_path(%w(1a)))
+        dir2 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree.find_by_path(%w(1b)))
+
+        expect(dir1.valid?).to eq(true)
+        expect(dir2.valid?).to eq(true)
       end
     end
   end
