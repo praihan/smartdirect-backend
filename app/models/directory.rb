@@ -5,13 +5,13 @@ class Directory < ApplicationRecord
   has_many :links, dependent: :destroy
   belongs_to :user
 
+  # We can't have a directory that belongs to user A
+  # but with a parent directory that belongs to user B
+  validate :_validate_same_user_as_parent
   # Validation for name is a little complex...
   validate :_validate_name
   # We can't do anything with an orphaned directory
   validates_presence_of :user
-  # We can't have a directory that belongs to user A
-  # but with a parent directory that belongs to user B
-  validate :_validate_same_user_as_parent
 
   # A directory is modeled in the db using a closure table
   has_closure_tree(
