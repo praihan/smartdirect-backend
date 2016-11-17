@@ -1,7 +1,7 @@
 # Every element with (Environment) means that they must be specified by the environment
 
 app:
-  valid_directory_name_regex: \A\S[A-Za-z0-9_\-\.\+=]+\S\z
+  valid_directory_name_regex: \A[A-Za-z0-9_\-\.\+]+\z
 
 jwt:
   client_id: # (Environment) ID of the auth0 client (the 'aud' claim)
