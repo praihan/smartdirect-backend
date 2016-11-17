@@ -62,7 +62,7 @@ RSpec.describe Directory, type: :model do
       #              4caaa
       child1a = Directory.create(name: '1a', user_id: user_id, parent: root)
       child2aa = Directory.create(name: '2aa', user_id: user_id, parent: child1a)
-      child3aaa = Directory.create(name: '3aaa', user_id: user_id, parent: child1a)
+      child3aaa = Directory.create(name: '3aaa', user_id: user_id, parent: child2aa)
       child2ab = Directory.create(name: '2ab', user_id: user_id, parent: child1a)
 
       child1b = Directory.create(name: '1b', user_id: user_id, parent: root)
@@ -82,6 +82,19 @@ RSpec.describe Directory, type: :model do
       child1b.parent = child2aa
 
       expect(child1b.valid?).to eq(true)
+      expect(child2aa.valid?).to eq(true)
+    end
+
+    # LOL
+    it 'destroys its children' do
+      child2aa = default_tree.find_by_path(%w(1a 2aa))
+
+      expect(default_tree.find_by_path(%w(1a 2aa 3aaa))).to_not eq(nil)
+
+      # Kaboom!
+      child2aa.destroy
+
+      expect(default_tree.find_by_path(%w(1a 2aa 3aaa))).to eq(nil)
     end
 
     context 'when two directories with same name' do
