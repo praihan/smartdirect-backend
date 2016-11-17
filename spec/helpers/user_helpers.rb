@@ -2,7 +2,7 @@ module RSpecHelpers
   module UserModel
 
     # noinspection RubyStringKeysInHashInspection
-    def create_dummy_jwt_payload(name:nil, email: nil, sub: nil)
+    def create_dummy_jwt_payload(name: nil, email: nil, sub: nil)
       return {
           'iss' => Settings[:jwt][:issuer],
           'aud' => Settings[:jwt][:client_id],
