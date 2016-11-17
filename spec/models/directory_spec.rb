@@ -87,14 +87,17 @@ RSpec.describe Directory, type: :model do
 
     # LOL
     it 'destroys its children' do
-      child2aa = default_tree.find_by_path(%w(1a 2aa))
+      child1a = default_tree.find_by_path(%w(1a))
 
       expect(default_tree.find_by_path(%w(1a 2aa 3aaa))).to_not eq(nil)
+      expect(default_tree.find_by_path(%w(1a 2ab))).to_not eq(nil)
 
       # Kaboom!
-      child2aa.destroy
+      child1a.destroy
 
+      expect(default_tree.find_by_path(%w(1a 2aa))).to eq(nil)
       expect(default_tree.find_by_path(%w(1a 2aa 3aaa))).to eq(nil)
+      expect(default_tree.find_by_path(%w(1a 2ab))).to eq(nil)
     end
 
     context 'when two directories with same name' do
