@@ -47,7 +47,7 @@ class User < ApplicationRecord
       # If we've just created a new user right, that's okay. This will be a no-op
       user.name = payload['name']
       user.email = payload['email']
-      user.save if user.changed?
+      user.save! if user.changed?
 
       # And finally, return the user back
       return user
@@ -57,19 +57,15 @@ class User < ApplicationRecord
     end
   end
 
-  # This is the LinkSystem attached to the user. Directories and files
-  # are linked to the LinkSystem instead of the User directory for ease
-  # of moving data around later.
-  has_one :link_system
-  # When a new user is created, we need to also create a LinkSystem for them
-  before_create :build_link_system
+  # This is the root Directory attached to the user.
+  has_one :directory
+  # When a new user is created, we need to also create a root Directory for them
+  before_create :build_root_directory
 
-  # The user (after one step of redirection) ultimately owns its LinkSystem's
-  # ROOT directory.
-  has_one :directory, through: :link_system
-
-  # If the user doesn't have a LinkSystem, they can't do anything
-  validates_associated :link_system
+  # If the user doesn't have a root Directory, they can't do anything
+  validates_associated :directory
+  # Make sure our root Directory is actually a root directory
+  validate :_validate_directory_is_root, on: :update
 
   # This is the first part of the claim. (e.g. 'github', 'google-oauth2')
   def oauth_provider
@@ -90,5 +86,18 @@ class User < ApplicationRecord
     # Otherwise don't provide any information
     return parts if parts.length == 2
     return []
+  end
+
+  def build_root_directory
+    # Over here, we create the root Directory for a user.
+    # This directory doesn't really have a name so we choose empty string
+    build_directory name: ''
+    return true
+  end
+
+  def _validate_directory_is_root
+    if directory == nil || !directory.root?
+      errors.add(:directory, 'must be a root Directory')
+    end
   end
 end

@@ -20,11 +20,7 @@ RSpec.describe User, type: :model do
       user = default_user
       expect(user.email).to eq(default_payload['email'])
     end
-    it 'has an attached LinkSystem' do
-      user = default_user
-      expect(user.link_system).to be_kind_of(LinkSystem)
-    end
-    it 'has an attached root directory' do
+    it 'has an attached root Directory' do
       user = default_user
       expect(user.directory).to be_kind_of(Directory)
       expect(user.directory.root?).to be_truthy

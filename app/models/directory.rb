@@ -3,15 +3,12 @@ class Directory < ApplicationRecord
   # A directory can contains other directories as well as files
   # Deleting is recursive
   has_many :links, dependent: :destroy
-  belongs_to :link_system
-
-  # Get the current user through the owning LinkSystem
-  delegate :user, to: :link_system
+  belongs_to :user
 
   # Validation for name is a little complex...
   validate :_validate_name
   # We can't do anything with an orphaned directory
-  validates_presence_of :link_system
+  validates_presence_of :user
   # We can't have a directory that belongs to user A
   # but with a parent directory that belongs to user B
   validate :_validate_same_user_as_parent
@@ -50,7 +47,7 @@ class Directory < ApplicationRecord
   end
 
   def _validate_same_user_as_parent
-    if parent != nil && parent.link_system_id != link_system_id
+    if parent != nil && parent.user_id != user_id
       errors.add(:parent, 'directory must have a parent that is part of the same user\'s tree')
     end
   end

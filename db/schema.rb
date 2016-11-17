@@ -16,13 +16,13 @@ ActiveRecord::Schema.define(version: 20161111085743) do
   enable_extension "plpgsql"
 
   create_table "directories", force: :cascade do |t|
-    t.integer  "link_system_id"
+    t.integer  "user_id"
     t.string   "name"
     t.integer  "parent_id"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
-    t.index ["link_system_id", "name"], name: "index_directories_on_link_system_id_and_name", using: :btree
-    t.index ["link_system_id"], name: "index_directories_on_link_system_id", using: :btree
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_directories_on_name", using: :btree
+    t.index ["user_id"], name: "index_directories_on_user_id", using: :btree
   end
 
   create_table "directory_hierarchies", id: false, force: :cascade do |t|
@@ -31,13 +31,6 @@ ActiveRecord::Schema.define(version: 20161111085743) do
     t.integer "generations",   null: false
     t.index ["ancestor_id", "descendant_id", "generations"], name: "directory_anc_desc_idx", unique: true, using: :btree
     t.index ["descendant_id"], name: "directory_desc_idx", using: :btree
-  end
-
-  create_table "link_systems", force: :cascade do |t|
-    t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_link_systems_on_user_id", using: :btree
   end
 
   create_table "links", force: :cascade do |t|
