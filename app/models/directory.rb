@@ -10,8 +10,6 @@ class Directory < ApplicationRecord
   validate :_validate_same_user_as_parent
   # Validation for name is a little complex...
   validate :_validate_name
-  # We can't do anything with an orphaned directory
-  validates_presence_of :user
 
   # A directory is modeled in the db using a closure table
   has_closure_tree(
