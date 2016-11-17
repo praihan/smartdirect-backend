@@ -10,6 +10,9 @@ CREATE DATABASE <database>;
 
 REVOKE CONNECT ON DATABASE <database> FROM PUBLIC;
 GRANT CONNECT ON DATABASE <database> TO username;
+
+ALTER USER <username> CREATEDB;
+ALTER DATABASE <database> OWNER TO <username>
 ```
 Please see [settings/test.yml](/config/settings/test.yml) to see/modify the connection settings
 used when testing.
