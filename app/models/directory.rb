@@ -37,9 +37,13 @@ class Directory < ApplicationRecord
       errors.add(:name, 'value must be a valid directory name')
     end
     # Make sure my siblings don't have the same name as me (CASE-INSENSITIVE)
-    sibling_names = siblings.pluck(:name)
-    if sibling_names.any?{ |s| s.casecmp(name) == 0 }
-      errors.add(:name, 'already have a sibling with the same value')
+    # Also, if we have a parent related error, we risk letting out info about another
+    # user if we check a sibling name
+    if errors.messages[:parent].blank?
+      sibling_names = siblings.pluck(:name)
+      if sibling_names.any?{ |s| s.casecmp(name) == 0 }
+        errors.add(:name, 'already have a sibling with the same value')
+      end
     end
   end
 
