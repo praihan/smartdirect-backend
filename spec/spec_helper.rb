@@ -25,7 +25,7 @@ RSpec.configure do |config|
 
   # This is where we define our helpers
 
-  config.include RSpecHelpers::JsonRequest, type: :request
+  config.include RSpecHelpers::JsonRequest
   config.include RSpecHelpers::UserModel
 
   # rspec-expectations config goes here. You can use an alternate

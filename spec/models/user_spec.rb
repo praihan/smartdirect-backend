@@ -37,6 +37,53 @@ RSpec.describe User, type: :model do
     end
   end
 
+  context 'when user changes their info' do
+    let(:identifiable_claim) { 'github|1234' }
+    it 'updates \'name\'' do
+      user = User.from_token_payload(
+          jwt_payload_from(
+              identifiable_claim: identifiable_claim,
+              name: 'Person A',
+              email: 'JSmith@example.com'
+          )
+      )
+      expect(user.name).to eq('Person A')
+
+      first_user_id = user.id
+      user = User.from_token_payload(
+          jwt_payload_from(
+              identifiable_claim: identifiable_claim,
+              name: 'Person B',
+              email: 'Person@example.com'
+          )
+      )
+      expect(user.id).to eq(first_user_id)
+
+      expect(user.name).to eq('Person B')
+    end
+    it 'updates \'email\'' do
+      user = User.from_token_payload(
+          jwt_payload_from(
+              identifiable_claim: identifiable_claim,
+              name: 'Person',
+              email: 'PersonA@example.com'
+          )
+      )
+      expect(user.email).to eq('PersonA@example.com')
+
+      first_user_id = user.id
+      user = User.from_token_payload(
+          jwt_payload_from(
+              identifiable_claim: identifiable_claim,
+              name: 'Person',
+              email: 'PersonB@example.com'
+          )
+      )
+      expect(user.id).to eq(first_user_id)
+      expect(user.email).to eq('PersonB@example.com')
+    end
+  end
+
   context 'when validating jwt claims' do
     context 'when validating \'name\'' do
       it 'fails if missing' do
