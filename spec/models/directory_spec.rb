@@ -18,8 +18,9 @@ RSpec.describe Directory, type: :model do
 
     context 'root Directory' do
       it 'fails if non-empty \'name\'' do
-        dir = first_user.build_directory(
+        dir = Directory.create(
             name: 'non-empty',
+            user_id: first_user.id,
             parent: nil
         )
         expect(dir.valid?).to eq(false)
@@ -31,8 +32,9 @@ RSpec.describe Directory, type: :model do
 
     context 'empty \'name\'' do
       it 'fails if non-root Directory' do
-        dir = first_user.build_directory(
+        dir = Directory.create(
             name: '',
+            user_id: first_user.id,
             parent: first_user.directory
         )
         expect(dir.valid?).to eq(false)
@@ -45,12 +47,14 @@ RSpec.describe Directory, type: :model do
 
   context 'when mixing directories from two users' do
     it 'fails validation' do
-      first_user_directory = first_user.build_directory(
+      first_user_directory = Directory.create(
           name: 'subdirectory',
+          user_id: first_user.id,
           parent: first_user.directory
       )
-      second_user_directory = second_user.build_directory(
+      second_user_directory = Directory.create(
           name: 'subdirectory',
+          user_id: second_user.id,
           parent: first_user_directory
       )
       expect(second_user_directory.valid?).to eq(false)
@@ -60,12 +64,14 @@ RSpec.describe Directory, type: :model do
     end
 
     it 'does not show error about duplicate sibling names' do
-      first_user.build_directory(
+      Directory.create(
           name: 'subdirectory',
+          user_id: first_user.id,
           parent: first_user.directory
       )
-      second_user_directory = second_user.build_directory(
+      second_user_directory = Directory.create(
           name: 'subdirectory',
+          user_id: second_user.id,
           parent: first_user.directory
       )
       expect(second_user_directory.valid?).to eq(false)
