@@ -47,11 +47,7 @@ RSpec.describe Directory, type: :model do
 
   context 'when destroying Directory' do
     it 'fails if root Directory' do
-      root_dir = Directory.create(
-          name: '',
-          user_id: first_user.id,
-          parent: nil
-      )
+      root_dir = first_user.directory
       expect(root_dir.valid?).to eq(true)
 
       # Try our best...
@@ -116,7 +112,16 @@ RSpec.describe Directory, type: :model do
     end
 
     it 'fails to destroy root node (and its descendants)' do
+      root_dir = default_tree
+      expect(root_dir.valid?).to eq(true)
 
+      descendants_count = root_dir.descendants.count
+
+      # Try our best...
+      was_destroyed = root_dir.destroy
+
+      expect(was_destroyed).to be(false)
+      expect(root_dir.descendants.count).to eq(descendants_count)
     end
 
     context 'when two directories with same name' do
@@ -130,20 +135,35 @@ RSpec.describe Directory, type: :model do
         expect(dir2.errors.messages[:name]).to(
             match_array 'already have a sibling with the same value'
         )
-
       end
 
       it 'works if they are not siblings' do
-        dir1 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree.find_by_path(%w(1a)))
-        dir2 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree.find_by_path(%w(1b)))
+        dir1 = Directory.create(
+            name: 'name',
+            user_id: default_tree.user_id,
+            parent: default_tree.find_by_path(%w(1a))
+        )
+        dir2 = Directory.create(
+            name: 'name',
+            user_id: default_tree.user_id,
+            parent: default_tree.find_by_path(%w(1b))
+        )
 
         expect(dir1.valid?).to eq(true)
         expect(dir2.valid?).to eq(true)
       end
 
       it 'fails if re-parenting to become siblings' do
-        dir1 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree.find_by_path(%w(1a)))
-        dir2 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree.find_by_path(%w(1b)))
+        dir1 = Directory.create(
+            name: 'name',
+            user_id: default_tree.user_id,
+            parent: default_tree.find_by_path(%w(1a))
+        )
+        dir2 = Directory.create(
+            name: 'name',
+            user_id: default_tree.user_id,
+            parent: default_tree.find_by_path(%w(1b))
+        )
 
         expect(dir1.valid?).to eq(true)
         expect(dir2.valid?).to eq(true)
