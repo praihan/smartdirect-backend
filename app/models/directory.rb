@@ -21,6 +21,14 @@ class Directory < ApplicationRecord
 
   private
 
+  # We don't allow deleting the root directory (which is attached to the user)
+  before_destroy :_ensure_not_root
+  def _ensure_not_root
+    if root?
+      throw :abort
+    end
+  end
+
   def _validate_name
     if root?
       # Root nodes get a pass as long as name is empty string.
