@@ -14,9 +14,5 @@ class CreateDirectories < ActiveRecord::Migration[5.0]
     # look for specific paths under a specific user when they modify it or
     # we have to look up the link to direct to
     add_index :directories, [:link_system_id, :name], using: :btree
-
-    # We also need to index on name since we sort on this column.
-    # Also it's unique!
-    add_index :directories, :name, :unique => true
   end
 end

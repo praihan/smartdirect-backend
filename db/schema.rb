@@ -23,7 +23,6 @@ ActiveRecord::Schema.define(version: 20161111085743) do
     t.datetime "updated_at",     null: false
     t.index ["link_system_id", "name"], name: "index_directories_on_link_system_id_and_name", using: :btree
     t.index ["link_system_id"], name: "index_directories_on_link_system_id", using: :btree
-    t.index ["name"], name: "index_directories_on_name", unique: true, using: :btree
   end
 
   create_table "directory_hierarchies", id: false, force: :cascade do |t|

@@ -1,4 +1,4 @@
-class CreateDirectoryHierarchies < ActiveRecord::Migration
+class CreateDirectoryHierarchies < ActiveRecord::Migration[5.0]
   def change
     create_table :directory_hierarchies, id: false do |t|
       t.integer :ancestor_id, null: false
