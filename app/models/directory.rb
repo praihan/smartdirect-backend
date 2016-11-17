@@ -26,10 +26,9 @@ class Directory < ApplicationRecord
   def _validate_name
     if root?
       # Root nodes get a pass as long as name is empty string.
-      # A root node is owned by a LinkSystem directory and has
-      # no actual meaning to the user.
+      # The name has no actual meaning to the user.
       if name != ''
-        errors.add(:name, 'value must be nil for root directory')
+        errors.add(:name, 'value must be empty for root directory')
       end
       return
     end
