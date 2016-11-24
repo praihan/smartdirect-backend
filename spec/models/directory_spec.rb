@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe Directory, type: :model do
-  let(:first_user) { create_dummy_user identifiable_claim: 'github|1234567890' }
-  let(:second_user) { create_dummy_user identifiable_claim: 'github|0987654321' }
+  let(:first_user) { create_dummy_user! identifiable_claim: 'github|1234567890' }
+  let(:second_user) { create_dummy_user! identifiable_claim: 'github|0987654321' }
 
   context 'when creating Directory' do
 

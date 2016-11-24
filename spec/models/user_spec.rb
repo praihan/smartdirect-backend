@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
 
   let(:default_payload) { create_dummy_jwt_payload }
-  let(:default_user) { create_dummy_user }
+  let(:default_user) { create_dummy_user! }
 
   it 'is able to create a simple one' do
     user = default_user
@@ -28,7 +28,7 @@ RSpec.describe User, type: :model do
     end
     it 'does not share directory with another user' do
       20.times do |n|
-        create_dummy_user identifiable_claim: "google-oauth2|#{n.to_s}"
+        create_dummy_user! identifiable_claim: "google-oauth2|#{n.to_s}"
       end
       all_users_directory_ids = User.all.map do |user|
         user.directory.id
