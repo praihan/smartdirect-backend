@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   get 'health-check' => 'health_check#index'
 
   get 'current-user' => 'current_user#index'
+  get 'current-directory' => 'current_directory#index'
 
   jsonapi_resources :users
   jsonapi_resources :directories
