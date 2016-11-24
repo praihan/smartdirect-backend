@@ -4,8 +4,8 @@ jwt:
   issuer: https://auth0.smartdirect.com
 
 postgres:
-  host: aws-us-east-1-portal.12.dblayer.com
-  username: admin
-  password: QTOSPDMAEIIJHVTT
-  database: compose
-  port: 15340
+  host: localhost
+  username: smartdirect
+  password: smartdirect
+  database: smartdirect_dev
+  port: 5432
