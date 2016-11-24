@@ -7,7 +7,7 @@ addons:
 before_script:
 - psql -c 'CREATE DATABASE travis_ci_smartdirect_test;' -U postgres
 env:
-  matrix:
+  global:
   - SMD_DATABASE_HOST=localhost
   - SMD_DATABASE_USER=postgres
   - SMD_DATABASE_PASSWORD=
