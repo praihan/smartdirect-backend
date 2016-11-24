@@ -188,6 +188,42 @@ RSpec.describe DirectoryResource, type: :request do
       )
     end
 
+    context 'when creating' do
+      it 'works on happy path' do
+        # if the directory already exists, then this test wouldn't work
+        expect(user1.directory.find_by_path(%w(subdirectory))).to eq(nil)
+
+        post '/directories', headers: headers1, as: :json, params: {
+            'data': {
+                'type': 'directories',
+                'attributes': {
+                    'name': 'subdirectory',
+                },
+                'relationships': {
+                    'parent': {
+                        'data': {
+                            'type': 'directories',
+                            'id': user1.directory.id,
+                        }
+                    }
+                }
+            }
+        }
+
+        expect(response.status).to eq(201)
+
+        response_data = JSON.parse(response.body)['data']
+        created_dir = user1.directory.find_by_path(%w(subdirectory))
+
+        expect(created_dir).to_not eq(nil)
+        expect(response_data['type']).to eq('directories')
+        expect(response_data['id']).to eq(created_dir.id.to_s)
+
+        response_attributes = response_data['attributes']
+        expect(response_attributes['name']).to eq('subdirectory')
+      end
+    end
+
   end
 
 end
