@@ -34,4 +34,55 @@ RSpec.describe DirectoryResource, type: :request do
     end
   end
 
+  context 'when existing user' do
+    let(:identifiable_claim) { 'github|1234' }
+    let(:name) { 'Scott Sterling' }
+    let(:email) { 'Scott@Sterling.co.uk' }
+    let(:headers) {
+      default_headers.merge(
+          auth_headers_from(
+              identifiable_claim: identifiable_claim,
+              name: name,
+              email: email
+          )
+      )
+    }
+
+    before(:each) do
+      # Force the user to exist before we do anything
+      @user = create_dummy_user!(
+          identifiable_claim: identifiable_claim,
+          name: name,
+          email: email,
+      )
+    end
+
+    it 'received directory is well-formed' do
+      get '/directories', headers: headers
+
+      body = JSON.parse response.body
+
+      expect(response.status).to eq(200)
+
+      expect(body['data'].length).to eq(1)
+
+      directory = body['data'][0]
+      expect(directory['id'].to_i).to eq(@user.directory.id)
+      expect(directory['type']).to eq('directories')
+
+      attributes = directory['attributes']
+      expect(attributes['name']).to eq('')
+      created_at_date = DateTime.parse attributes['created-at'] rescue nil
+      expect(created_at_date).to_not eq(nil)
+      expect(created_at_date > 30.seconds.ago).to eq(true)
+      expect(attributes['created-at']).to eq(attributes['updated-at'])
+
+      relationships = directory['relationships']
+      expect(relationships['user']).to_not eq(nil)
+      expect(relationships['parent']).to_not eq(nil)
+      expect(relationships['children']).to_not eq(nil)
+    end
+
+  end
+
 end
