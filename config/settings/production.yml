@@ -1,11 +1,11 @@
 jwt:
-  client_id: <%= ENV['JWT_AUDIENCE'] %>
-  client_secret: <%= ENV['JWT_SECRET'] %>
-  issuer: <%= ENV['JWT_ISSUER'] %>
+  client_id: <%= ENV['SMD_JWT_AUDIENCE'] %>
+  client_secret: <%= ENV['SMD_JWT_SECRET'] %>
+  issuer: <%= ENV['SMD_JWT_ISSUER'] %>
 
 postgres:
-  host: <%= ENV['DATABASE_HOST'] %>
-  username: <%= ENV['DATABASE_USER'] %>
-  password: <%= ENV['DATABASE_PASSWORD'] %>
-  database: <%= ENV['DATABASE_DB'] %>
-  port: <%= ENV['DATABASE_PORT'] %>
+  host: <%= ENV['SMD_DATABASE_HOST'] %>
+  username: <%= ENV['SMD_DATABASE_USER'] %>
+  password: <%= ENV['SMD_DATABASE_PASSWORD'] %>
+  database: <%= ENV['SMD_DATABASE_DB'] %>
+  port: <%= ENV['SMD_DATABASE_PORT'] %>
