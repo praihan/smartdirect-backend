@@ -47,14 +47,17 @@ RSpec.describe DirectoryResource, type: :request do
           )
       )
     }
-
-    before(:each) do
-      # Force the user to exist before we do anything
-      @user = create_dummy_user!(
+    let(:user) {
+      create_dummy_user!(
           identifiable_claim: identifiable_claim,
           name: name,
           email: email,
       )
+    }
+
+    before(:each) do
+      # Force the user to exist before we do anything
+      user
     end
 
     it 'received directory is well-formed' do
@@ -67,8 +70,8 @@ RSpec.describe DirectoryResource, type: :request do
       expect(body['data'].length).to eq(1)
 
       directory = body['data'][0]
-      expect(directory['id'].to_i).to eq(@user.directory.id)
       expect(directory['type']).to eq('directories')
+      expect(directory['id'].to_i).to eq(user.directory.id)
 
       attributes = directory['attributes']
       expect(attributes['name']).to eq('')
@@ -81,6 +84,108 @@ RSpec.describe DirectoryResource, type: :request do
       expect(relationships['user']).to_not eq(nil)
       expect(relationships['parent']).to_not eq(nil)
       expect(relationships['children']).to_not eq(nil)
+    end
+
+    it 'allows getting own directory' do
+      get "/directories/#{user.directory.id}", headers: headers
+
+      body = JSON.parse response.body
+
+      expect(response.status).to eq(200)
+
+      directory = body['data']
+      expect(directory['type']).to eq('directories')
+      expect(directory['id'].to_i).to eq(user.directory.id)
+    end
+  end
+
+  context 'when multiple users' do
+    let(:identifiable_claim1) { 'github|1234' }
+    let(:name1) { 'User 1' }
+    let(:email1) { 'user@user1.com' }
+    let(:headers1) {
+      default_headers.merge(
+          auth_headers_from(
+              identifiable_claim: identifiable_claim1,
+              name: name1,
+              email: email1
+          )
+      )
+    }
+    let(:user1) {
+      create_dummy_user!(
+          identifiable_claim: identifiable_claim1,
+          name: name1,
+          email: email1,
+      )
+    }
+    let(:identifiable_claim2) { 'google-oauth2|1234' }
+    let(:name2) { 'User 2' }
+    let(:email2) { 'user@user2.com' }
+    let(:headers2) {
+      default_headers.merge(
+          auth_headers_from(
+              identifiable_claim: identifiable_claim2,
+              name: name2,
+              email: email2
+          )
+      )
+    }
+    let(:user2) {
+      create_dummy_user!(
+          identifiable_claim: identifiable_claim2,
+          name: name2,
+          email: email2,
+      )
+    }
+
+    before(:each) do
+      # Force the users to exist before we do anything
+      user1
+      user2
+    end
+
+    it 'only shows current user\'s directory' do
+      get '/directories/', headers: headers1
+
+      body = JSON.parse response.body
+
+      expect(response.status).to eq(200)
+
+      expect(body['data'].length).to eq(1)
+      directory = body['data'][0]
+      expect(directory['type']).to eq('directories')
+      expect(directory['id'].to_i).to eq(user1.directory.id)
+    end
+
+    it 'allows getting own directory' do
+      get "/directories/#{user1.directory.id}", headers: headers1
+
+      body = JSON.parse response.body
+
+      expect(response.status).to eq(200)
+
+      directory = body['data']
+      expect(directory['type']).to eq('directories')
+      expect(directory['id'].to_i).to eq(user1.directory.id)
+    end
+
+    it 'disallows getting other users\' directories' do
+      # Note the header-user mismatch
+      get "/directories/#{user2.directory.id}", headers: headers1
+
+      body = JSON.parse response.body
+
+      expect(response.status).to eq(404)
+      # noinspection RubyStringKeysInHashInspection
+      expect(body['errors']).to(
+          match_array([{
+              'title' => 'Record not found',
+              'detail' => "The record identified by #{user2.directory.id} could not be found.",
+              'code' => 'RECORD_NOT_FOUND',
+              'status' => '404',
+          }])
+      )
     end
 
   end
