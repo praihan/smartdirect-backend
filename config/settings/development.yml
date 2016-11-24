@@ -1,7 +1,7 @@
 jwt:
-  client_id: LbGid9glzIogma9BHpJYvy4svR5A1lGa
+  client_id: <%= ENV['SMD_JWT_AUDIENCE'] %>
   client_secret: <%= ENV['SMD_JWT_SECRET'] %>
-  issuer: https://auth0.smartdirect.com
+  issuer: <%= ENV['SMD_JWT_ISSUER'] %>
 
 postgres:
   host: localhost
