@@ -235,7 +235,22 @@ RSpec.describe Directory, type: :model do
     end
   end
 
-  context 'when mixing directories from two users' do
+  context 'when directories from two users' do
+    it 'accepts same named directory for different users' do
+      first_user_directory = Directory.create(
+          name: 'subdirectory',
+          user_id: first_user.id,
+          parent: first_user.directory
+      )
+      second_user_directory = Directory.create(
+          name: 'subdirectory',
+          user_id: second_user.id,
+          parent: second_user.directory
+      )
+      expect(first_user_directory.valid?).to eq(true)
+      expect(second_user_directory.valid?).to eq(true)
+    end
+
     it 'fails validation' do
       first_user_directory = Directory.create(
           name: 'subdirectory',
