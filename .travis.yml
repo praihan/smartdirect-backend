@@ -18,4 +18,5 @@ env:
 before_script:
 - psql -c 'CREATE DATABASE travis_ci_smartdirect_test;' -U postgres
 script:
-- RAILS_ENV=test bundle exec rake –-trace db:migrate spec
+  - RAILS_ENV=test bundle exec rake db:migrate --trace
+  - bundle exec rspec spec/ --format documentation
