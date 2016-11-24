@@ -42,6 +42,8 @@ group :development, :test do
   gem 'rspec-rails', '~> 3.5'
   # Backtrace SQL queries back to app code
   gem 'active_record_query_trace'
+  # Use .env files for development and test
+  gem 'dotenv-rails', :groups => [:development, :test]
 end
 
 group :development do

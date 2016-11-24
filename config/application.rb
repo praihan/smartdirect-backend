@@ -16,6 +16,9 @@ require "rails/test_unit/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# We need to load .env files as early as possible so be can use them in settings/*.yml.
+Dotenv::Railtie.load
+
 module SmartdirectApi
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
