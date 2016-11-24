@@ -23,5 +23,14 @@ module RSpecHelpers
       )
     end
 
+    def create_dummy_user!(identifiable_claim: nil, name: nil, email: nil)
+      default_payload = create_dummy_jwt_payload
+      return User.create!(
+          identifiable_claim: identifiable_claim || default_payload['sub'],
+          name: name || default_payload['name'],
+          email: email || default_payload['email'],
+      )
+    end
+
   end
 end
