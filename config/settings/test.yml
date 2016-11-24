@@ -4,8 +4,8 @@ jwt:
   issuer: <%= ENV['SMD_JWT_ISSUER'] %>
 
 postgres:
-  host: localhost
-  username: smartdirect
-  password: smartdirect
-  database: smartdirect_test
-  port: 5432
+  host: <%= ENV['SMD_DATABASE_HOST'] || 'localhost' %>
+  username: <%= ENV['SMD_DATABASE_USER'] || 'smartdirect' %>
+  password: <%= ENV['SMD_DATABASE_PASSWORD'] || 'smartdirect' %>
+  database: <%= ENV['SMD_DATABASE_DB'] || 'smartdirect_dev' %>
+  port: <%= ENV['SMD_DATABASE_PORT'] || '5432' %>
