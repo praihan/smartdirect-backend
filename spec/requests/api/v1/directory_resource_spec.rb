@@ -2,11 +2,11 @@ require 'rails_helper'
 
 # See helpers/json_helpers.rb for added DSL
 
-RSpec.describe DirectoryResource, type: :request do
+RSpec.describe Api::V1::DirectoryResource, type: :request do
 
   context 'when there is no auth token' do
     it 'fails with 401-Unauthorized' do
-      get '/directories', headers: default_headers
+      get '/api/v1/directories', headers: default_headers
 
       body = JSON.parse response.body
 
@@ -26,7 +26,7 @@ RSpec.describe DirectoryResource, type: :request do
               email: 'Donald@Duck.com'
           )
       )
-      get '/directories', headers: headers
+      get '/api/v1/directories', headers: headers
 
       body = JSON.parse response.body
 
@@ -61,7 +61,7 @@ RSpec.describe DirectoryResource, type: :request do
     end
 
     it 'received directory is well-formed' do
-      get '/directories', headers: headers
+      get '/api/v1/directories', headers: headers
 
       body = JSON.parse response.body
 
@@ -87,7 +87,7 @@ RSpec.describe DirectoryResource, type: :request do
     end
 
     it 'allows getting own directory' do
-      get "/directories/#{user.directory.id}", headers: headers
+      get "/api/v1/directories/#{user.directory.id}", headers: headers
 
       body = JSON.parse response.body
 
@@ -146,7 +146,7 @@ RSpec.describe DirectoryResource, type: :request do
     end
 
     it 'only shows current user\'s directory' do
-      get '/directories/', headers: headers1
+      get '/api/v1/directories/', headers: headers1
 
       body = JSON.parse response.body
 
@@ -159,7 +159,7 @@ RSpec.describe DirectoryResource, type: :request do
     end
 
     it 'allows getting own directory' do
-      get "/directories/#{user1.directory.id}", headers: headers1
+      get "/api/v1/directories/#{user1.directory.id}", headers: headers1
 
       body = JSON.parse response.body
 
@@ -172,7 +172,7 @@ RSpec.describe DirectoryResource, type: :request do
 
     it 'disallows getting other users\' directories' do
       # Note the header-user mismatch
-      get "/directories/#{user2.directory.id}", headers: headers1
+      get "/api/v1/directories/#{user2.directory.id}", headers: headers1
 
       body = JSON.parse response.body
 
@@ -193,7 +193,7 @@ RSpec.describe DirectoryResource, type: :request do
         # if the directory already exists, then this test wouldn't work
         expect(user1.directory.find_by_path(%w(subdirectory))).to eq(nil)
 
-        post '/directories', headers: headers1, as: :json, params: {
+        post '/api/v1/directories', headers: headers1, as: :json, params: {
             'data': {
                 'type': 'directories',
                 'attributes': {

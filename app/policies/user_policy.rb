@@ -3,7 +3,7 @@ class UserPolicy < ApplicationPolicy
     attr_reader :user, :scope
 
     def initialize(user, scope)
-      @user  = user
+      @user = user
       @scope = scope
     end
 
@@ -24,3 +24,5 @@ class UserPolicy < ApplicationPolicy
     return true
   end
 end
+
+
