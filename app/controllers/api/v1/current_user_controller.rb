@@ -4,9 +4,8 @@ module Api
       before_action :authenticate_user
 
       def index
-        redirect_to "/users/#{current_user.id}/"
+        redirect_to "/api/v1/users/#{current_user.id}/"
       end
-
     end
   end
 end
