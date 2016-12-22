@@ -43,6 +43,104 @@ RSpec.describe Directory, type: :model do
         )
       end
     end
+
+    context 'valid name' do
+      it 'accepts dot character as name' do
+        dir = Directory.create(
+            name: '.',
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(true)
+      end
+      it 'accepts dash character as name' do
+        dir = Directory.create(
+            name: '-',
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(true)
+      end
+      it 'accepts plus character as name' do
+        dir = Directory.create(
+            name: '+',
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(true)
+      end
+      it 'accepts underscore character as name' do
+        dir = Directory.create(
+            name: '_',
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(true)
+      end
+      it 'accepts numbers-only as name' do
+        dir = Directory.create(
+            name: '01234567890',
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(true)
+      end
+      it 'accepts mix of all character types as name' do
+        dir = Directory.create(
+            name: 'AabZ21-s0+z..s9F.',
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(true)
+      end
+    end
+
+    context 'invalid name' do
+      it 'fails if has space' do
+        dir = Directory.create(
+            name: 'hello world',
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(false)
+        expect(dir.errors.messages[:name]).to(
+            match_array ['value must be a valid directory name']
+        )
+      end
+      it 'fails if has tab' do
+        dir = Directory.create(
+            name: "hello\tworld",
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(false)
+        expect(dir.errors.messages[:name]).to(
+            match_array ['value must be a valid directory name']
+        )
+      end
+      it 'fails if has ascii symbol' do
+        dir = Directory.create(
+            name: 'money$',
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(false)
+        expect(dir.errors.messages[:name]).to(
+            match_array ['value must be a valid directory name']
+        )
+      end
+      it 'fails if has weird unicode symbol' do
+        dir = Directory.create(
+            name: 'check✓mark',
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(false)
+        expect(dir.errors.messages[:name]).to(
+            match_array ['value must be a valid directory name']
+        )
+      end
+    end
   end
 
   context 'when destroying Directory' do
