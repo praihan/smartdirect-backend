@@ -38,11 +38,20 @@ class Directory < ApplicationRecord
       end
       return
     end
-    # Non-root nodes have to pass the name regex
+    # Basic checks:
+    #   1. Non-root nodes have to pass the name regex
+    #   2. Name isn't too damn long
+    # If either check fails, then we can stop further checking
+    max_directory_name_length = Settings[:app][:max_directory_name_length]
+    if name.length > max_directory_name_length
+      errors.add(:name, 'value exceeds maximum allowed length')
+      return
+    end
     valid_directory_name_regex = /#{Settings[:app][:valid_directory_name_regex]}/
     unless valid_directory_name_regex =~ name
       # It's okay to be vague
       errors.add(:name, 'value must be a valid directory name')
+      return
     end
     # Make sure my siblings don't have the same name as me (CASE-INSENSITIVE)
     # Also, if we have a parent related error, we risk letting out info about another

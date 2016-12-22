@@ -140,6 +140,19 @@ RSpec.describe Directory, type: :model do
             match_array ['value must be a valid directory name']
         )
       end
+      it 'fails if exceeds maximum length' do
+        # Last time I checked this is the max length
+        MAX_DIRECTORY_NAME_LENGTH = 31
+        dir = Directory.create(
+            name: '0' * (MAX_DIRECTORY_NAME_LENGTH + 1),
+            user_id: first_user.id,
+            parent: first_user.directory
+        )
+        expect(dir.valid?).to eq(false)
+        expect(dir.errors.messages[:name]).to(
+            match_array ['value exceeds maximum allowed length']
+        )
+      end
     end
   end
 
@@ -226,6 +239,18 @@ RSpec.describe Directory, type: :model do
       it 'fails if they are siblings' do
         dir1 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree)
         dir2 = Directory.create(name: 'name', user_id: default_tree.user_id, parent: default_tree)
+
+        expect(dir1.valid?).to eq(true)
+        expect(dir2.valid?).to eq(false)
+
+        expect(dir2.errors.messages[:name]).to(
+            match_array 'already have a sibling with the same value'
+        )
+      end
+
+      it 'fails if they are siblings (case-insensitive)' do
+        dir1 = Directory.create(name: 'name+', user_id: default_tree.user_id, parent: default_tree)
+        dir2 = Directory.create(name: 'NaMe+', user_id: default_tree.user_id, parent: default_tree)
 
         expect(dir1.valid?).to eq(true)
         expect(dir2.valid?).to eq(false)

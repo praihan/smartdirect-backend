@@ -2,6 +2,7 @@
 
 app:
   valid_directory_name_regex: \A[A-Za-z0-9_\-\.\+]+\z
+  max_directory_name_length: 31
 
 jwt:
   client_id: # (Environment) ID of the auth0 client (the 'aud' claim)
