@@ -78,7 +78,6 @@ RSpec.describe Api::V1::DirectoryResource, type: :request do
       created_at_date = DateTime.parse attributes['created-at'] rescue nil
       expect(created_at_date).to_not eq(nil)
       expect(created_at_date > 30.seconds.ago).to eq(true)
-      expect(attributes['created-at']).to eq(attributes['updated-at'])
 
       relationships = directory['relationships']
       expect(relationships['user']).to_not eq(nil)

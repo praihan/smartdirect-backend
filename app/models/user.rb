@@ -103,17 +103,10 @@ class User < ApplicationRecord
 
   def take_ownership_of_directory
     directory.user = self
-
-    should_record_timestamps = ActiveRecord::Base.record_timestamps
-    begin
-      ActiveRecord::Base.record_timestamps = false
-      # Throw an exception if we can't take ownership.
-      # This will cause us to rollback the transaction and
-      # no phantom directories will be created.
-      directory.save!
-    ensure
-      ActiveRecord::Base.record_timestamps = should_record_timestamps
-    end
+    # Throw an exception if we can't take ownership.
+    # This will cause us to rollback the transaction and
+    # no phantom directories will be created.
+    directory.save!
   end
 
   def _validate_directory_is_root
