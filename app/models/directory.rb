@@ -3,13 +3,16 @@ class Directory < ApplicationRecord
   # A directory can contains other directories as well as files
   # Deleting is recursive
   has_many :links, dependent: :destroy
-  belongs_to :user
+  belongs_to :user, optional: true
 
   # We can't have a directory that belongs to user A
   # but with a parent directory that belongs to user B
   validate :_validate_same_user_as_parent
   # Validation for name is a little complex...
   validate :_validate_name
+  # We need to always make sure we have a user
+  # unless we're a root.
+  validate :_validate_presence_of_user_unless_root
 
   # A directory is modeled in the db using a closure table
   has_closure_tree(
@@ -26,6 +29,15 @@ class Directory < ApplicationRecord
   def _ensure_not_root
     if root?
       throw :abort
+    end
+  end
+
+  def _validate_presence_of_user_unless_root
+    if root?
+      return
+    end
+    if user_id == nil
+      errors.add(:user, 'must exist')
     end
   end
 

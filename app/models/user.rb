@@ -58,11 +58,14 @@ class User < ApplicationRecord
   end
 
   # This is the root Directory attached to the user.
-  has_one :directory
+  belongs_to :directory, optional: true
   # When a new user is created, we need to also create a root Directory for them
-  before_create :build_root_directory
+  before_create :build_root_directory_if_needed
+  # Take ownership of our root Directory always
+  after_create :take_ownership_of_directory
 
   # If the user doesn't have a root Directory, they can't do anything
+  validates_presence_of :directory, on: :save
   validates_associated :directory
   # Make sure our root Directory is actually a root directory
   validate :_validate_directory_is_root, on: :update
@@ -88,15 +91,33 @@ class User < ApplicationRecord
     return []
   end
 
-  def build_root_directory
+  def build_root_directory_if_needed
     # Over here, we create the root Directory for a user.
     # This directory doesn't really have a name so we choose empty string
-    build_directory name: ''
+    unless directory == nil
+      return
+    end
+    create_directory name: ''
     return true
   end
 
+  def take_ownership_of_directory
+    directory.user = self
+
+    should_record_timestamps = ActiveRecord::Base.record_timestamps
+    begin
+      ActiveRecord::Base.record_timestamps = false
+      # Throw an exception if we can't take ownership.
+      # This will cause us to rollback the transaction and
+      # no phantom directories will be created.
+      directory.save!
+    ensure
+      ActiveRecord::Base.record_timestamps = should_record_timestamps
+    end
+  end
+
   def _validate_directory_is_root
-    if directory == nil || !directory.root?
+    if directory == nil || !directory.root? || directory.name != ''
       errors.add(:directory, 'must be a root Directory')
     end
   end

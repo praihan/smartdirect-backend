@@ -8,11 +8,21 @@ RSpec.describe Directory, type: :model do
 
     context 'no user' do
       it 'fails with proper error' do
-        dir = Directory.create(name: '', parent: nil)
+        root_dir = Directory.create(
+            name: 'non-empty',
+            user_id: first_user.id,
+            parent: nil
+        )
+        dir = Directory.create(name: '', parent: root_dir)
         expect(dir.valid?).to eq(false)
         expect(dir.errors.messages[:user]).to(
             match_array ['must exist']
         )
+      end
+
+      it 'works if root directory' do
+        dir = Directory.create(name: '', parent: nil)
+        expect(dir.valid?).to eq(true)
       end
     end
 
