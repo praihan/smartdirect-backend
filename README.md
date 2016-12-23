@@ -1,4 +1,6 @@
-# README
+# Smartdirect
+
+[![Build Status](https://travis-ci.org/prshreshtha/smartdirect-backend.svg?branch=master)](https://travis-ci.org/prshreshtha/smartdirect-backend)
 
 ## Testing
 
