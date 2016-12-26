@@ -27,8 +27,13 @@ class DirectoryPolicy < ApplicationPolicy
     return true
   end
 
-  # A user should allowed to update a directory
+  # A user should be allowed to update a directory
   def update?
+    return true
+  end
+
+  # A user should be allowed to delete one of their own directories
+  def destroy?
     return true
   end
 end

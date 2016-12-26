@@ -223,6 +223,41 @@ RSpec.describe Api::V1::DirectoryResource, type: :request do
       end
     end
 
+    context 'when destroying' do
+      it 'works on happy path' do
+        # if the directory already exists, then this test wouldn't work
+        expect(user1.directory.find_by_path(%w(subdirectory))).to eq(nil)
+        # create the directory first
+        post '/api/v1/directories', headers: headers1, as: :json, params: {
+            'data': {
+                'type': 'directories',
+                'attributes': {
+                    'name': 'subdirectory',
+                },
+                'relationships': {
+                    'parent': {
+                        'data': {
+                            'type': 'directories',
+                            'id': user1.directory.id,
+                        }
+                    }
+                }
+            }
+        }
+        expect(response.status).to eq(201)
+
+        created_dir = user1.directory.find_by_path(%w(subdirectory))
+        expect(created_dir).to_not eq(nil)
+
+        delete "/api/v1/directories/#{created_dir.id}", headers: headers1
+        # No content = deleted
+        expect(response.status).to eq(204)
+        # directory should also be gone
+        created_dir = user1.directory.find_by_path(%w(subdirectory))
+        expect(created_dir).to eq(nil)
+      end
+    end
+
   end
 
 end
