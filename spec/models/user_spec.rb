@@ -42,6 +42,20 @@ RSpec.describe User, type: :model do
   end
 
   context 'when generating friendly name' do
+    context 'when empty(-ish)' do
+      it 'uses a fake name if empty name' do
+        friendly_name = User.generate_friendly_name ''
+        # good enough
+        expect(friendly_name.length).to be > 0
+      end
+      it 'uses a fake name if symbolic name' do
+        garbage_name = " ☀☂☕ \t "
+        friendly_name = User.generate_friendly_name garbage_name
+        expect(friendly_name.length).to be > 0
+        expect(friendly_name.chars & garbage_name.chars).to match_array([])
+      end
+    end
+
     context 'when unfriendly characters' do
       it 'converts ascii symbols to words' do
         expect(User.generate_friendly_name 'Tom & Jerry').to eq('tom-and-jerry')

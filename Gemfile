@@ -38,6 +38,9 @@ gem 'closure_tree'
 # Use stringex for sanitizing names for URLs
 gem 'stringex'
 
+# Use Faker for making fake names and stuff
+gem 'faker'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri

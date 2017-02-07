@@ -83,7 +83,8 @@ class User < ApplicationRecord
   def self.generate_friendly_name(seed_name, max_length: Settings[:app][:max_friendly_name_length])
     possible_name = seed_name.to_url
     if possible_name.length == 0
-      raise StandardError.new
+      # If our name is garbage then retry with a (random) better name
+      return self.generate_friendly_name Faker::Name.name, max_length: max_length
     end
     counter = 0
     # Note that this can be fairly inefficient (with the DB hits).
