@@ -34,8 +34,10 @@ class User < ApplicationRecord
         )
       end
 
-      User.transaction do
-        # Since we provide no sign up mechanism ourselves, users are created on the fly
+      # Since we provide no sign up mechanism ourselves, users are created on the fly
+      # We retry in case of race conditions.
+      already_retried = false
+      begin
         user = self.find_or_create_by identifiable_claim: sub_claim do |user|
           # NOTE: This is only called when creating a new user
           # The code works without this but then we have an extra query
@@ -46,16 +48,29 @@ class User < ApplicationRecord
           # Generate a friendly name using their own name as seed
           user.friendly_name = generate_friendly_name user.name
         end
-
-        # If these fields have changed, then update them in the database as well
-        # If we've just created a new user right, that's okay. This will be a no-op
-        user.name = payload['name']
-        user.email = payload['email']
-        user.save! if user.changed?
-
-        # And finally, return the user back
-        return user
+      rescue ActiveRecord::RecordNotUnique => e
+        if already_retried
+          raise
+        end
+        already_retried = true
+        retry
       end
+
+      # If these fields have changed, then update them in the database as well
+      # If we've just created a new user right now, that's okay. This will be a no-op.
+      user.name = payload['name']
+      user.email = payload['email']
+      if user.changed?
+        user.with_lock do
+          # We need to reassign since locking will reload the data.
+          user.name = payload['name']
+          user.email = payload['email']
+          user.save!
+        end
+      end
+
+      # And finally, return the user back
+      return user
     rescue Exception => e
       Rails.logger.error "Error when fetching error from jwt payload: #{e.message}"
       raise
