@@ -13,9 +13,14 @@ class CreateUsers < ActiveRecord::Migration[5.0]
       t.string :email
       t.string :name
 
+      # this should also never be used to identify the user. This is the "user name"
+      # that should be in the URL instead of the user's id when looking it up publicly.
+      t.string :friendly_name
+
       t.timestamps
     end
 
     add_index :users, :identifiable_claim, :unique => true
+    add_index :users, :friendly_name, :unique => true
   end
 end

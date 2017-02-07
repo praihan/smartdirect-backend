@@ -45,9 +45,11 @@ ActiveRecord::Schema.define(version: 20161111085743) do
     t.integer  "directory_id"
     t.string   "email"
     t.string   "name"
+    t.string   "friendly_name"
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
     t.index ["directory_id"], name: "index_users_on_directory_id", using: :btree
+    t.index ["friendly_name"], name: "index_users_on_friendly_name", unique: true, using: :btree
     t.index ["identifiable_claim"], name: "index_users_on_identifiable_claim", unique: true, using: :btree
   end
 

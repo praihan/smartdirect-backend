@@ -34,26 +34,64 @@ class User < ApplicationRecord
         )
       end
 
-      # Since we provide no sign up mechanism ourselves, users are created on the fly
-      user = self.find_or_create_by identifiable_claim: sub_claim do |user|
-        # NOTE: This is only called when creating a new user
-        # The code works without this but then we have an extra query
-        # and created_at no longer matches updated_at
+      User.transaction do
+        # Since we provide no sign up mechanism ourselves, users are created on the fly
+        user = self.find_or_create_by identifiable_claim: sub_claim do |user|
+          # NOTE: This is only called when creating a new user
+          # The code works without this but then we have an extra query
+          # and created_at no longer matches updated_at
+          user.name = payload['name']
+          user.email = payload['email']
+
+          # Generate a friendly name using their own name as seed
+          user.friendly_name = generate_friendly_name user.name
+        end
+
+        # If these fields have changed, then update them in the database as well
+        # If we've just created a new user right, that's okay. This will be a no-op
         user.name = payload['name']
         user.email = payload['email']
+        user.save! if user.changed?
+
+        # And finally, return the user back
+        return user
       end
-
-      # If these fields have changed, then update them in the database as well
-      # If we've just created a new user right, that's okay. This will be a no-op
-      user.name = payload['name']
-      user.email = payload['email']
-      user.save! if user.changed?
-
-      # And finally, return the user back
-      return user
     rescue Exception => e
       Rails.logger.error "Error when fetching error from jwt payload: #{e.message}"
       raise
+    end
+  end
+
+  # Try to generate a URL friendly name from the given seed name. Conflicts will
+  # be resolved with suffixed numbers. Strings will be truncated to proper length.
+  # NOTE that this function is NOT pure.
+  def self.generate_friendly_name(seed_name, max_length: Settings[:app][:max_friendly_name_length])
+    possible_name = seed_name.to_url
+    if possible_name.length == 0
+      raise StandardError.new
+    end
+    counter = 0
+    # Note that this can be fairly inefficient (with the DB hits).
+    # But this is the simplest correct way to do it. A user may change names so
+    # we may have gaps anyways. Plus, this will only run once per user.
+    loop do
+      truncate_for_counter = counter == 0 ? 0 : counter.to_s.length
+      max_len_from_name = max_length - truncate_for_counter
+      # build up as many words as we can
+      current_name = possible_name.split('-').reduce do |accum, word|
+        if accum.length + word.length > max_len_from_name
+          break accum
+        end
+        next "#{accum}-#{word}"
+      end
+      # We need to do this in the case where the splitting only has one word
+      current_name = current_name[0..max_len_from_name - 1]
+      unless counter == 0
+        current_name = "#{current_name}#{counter.to_s}"
+      end
+      conflict = User.exists?(friendly_name: current_name)
+      return current_name unless conflict
+      counter += 1
     end
   end
 

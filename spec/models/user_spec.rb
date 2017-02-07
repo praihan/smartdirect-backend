@@ -20,6 +20,10 @@ RSpec.describe User, type: :model do
       user = default_user
       expect(user.email).to eq(default_payload['email'])
     end
+    it 'correctly reports \'friendly_name\'' do
+      user = default_user
+      expect(user.friendly_name).to eq('john-smith')
+    end
     it 'has an attached root Directory' do
       user = default_user
       expect(user.directory).to be_kind_of(Directory)
@@ -34,6 +38,74 @@ RSpec.describe User, type: :model do
         user.directory.id
       end
       expect(all_users_directory_ids).to match_array(all_users_directory_ids.uniq)
+    end
+  end
+
+  context 'when generating friendly name' do
+    context 'when unfriendly characters' do
+      it 'converts ascii symbols to words' do
+        expect(User.generate_friendly_name 'Tom & Jerry').to eq('tom-and-jerry')
+      end
+      it 'converts standard unicode characters' do
+        expect(User.generate_friendly_name 'TèïåçêèÄÉæôm & Jërry').to eq('teiaceeaeaeom-and-jerry')
+      end
+      it 'omits weird unicode characters' do
+        expect(User.generate_friendly_name 'Tom &♣⌂⌐♪ Jerry').to eq('tom-and-jerry')
+      end
+    end
+
+    context 'when conflicts' do
+      let (:default_user2) { create_dummy_user! identifiable_claim: 'google-oauth2|1234' }
+      let (:default_user3) { create_dummy_user! identifiable_claim: 'google-oauth2|12345' }
+
+      it 'suffixes numbers' do
+        user = default_user
+        user2 = default_user2
+        user3 = default_user3
+        expect(user2.friendly_name).to eq("#{user.friendly_name}1")
+        expect(user3.friendly_name).to eq("#{user.friendly_name}2")
+      end
+    end
+
+    context 'when name is long' do
+      it 'works with exactly max length' do
+        name = 'a' * 20
+        expect(User.generate_friendly_name(name, max_length: 20)).to eq(name)
+      end
+      it 'breaks on words instead of characters' do
+        name = 'hello-world'
+        max_length = 'hello-wor'.length
+        expect(User.generate_friendly_name(name, max_length: max_length)).to eq('hello')
+      end
+      it 'truncates if one word is too long' do
+        name = 'hello'
+        expect(User.generate_friendly_name(name, max_length: 2)).to eq('he')
+      end
+      it 'truncates ascii converted url' do
+        name = '%' * 2
+        max_length = 'percent'.length + 1
+        expect(User.generate_friendly_name(name, max_length: max_length)).to eq('percent')
+      end
+      it 'does not have trailing dashes' do
+        name = 'a-'
+        expect(User.generate_friendly_name name, max_length: 2).to eq('a')
+      end
+
+      context 'when conflicts' do
+        let (:what_the_user) {
+          create_dummy_user!(
+            identifiable_claim: 'google-oauth2|1234',
+            friendly_name: 'what-the',
+          )
+        }
+        it 'truncates last word to be make room for suffix' do
+          # Force create the user
+          what_the_user
+          name = 'what-the-hell'
+          max_length = 'what-the'.length
+          expect(User.generate_friendly_name name, max_length: max_length).to eq('what-th1')
+        end
+      end
     end
   end
 
@@ -81,6 +153,28 @@ RSpec.describe User, type: :model do
       )
       expect(user.id).to eq(first_user_id)
       expect(user.email).to eq('PersonB@example.com')
+    end
+
+    it 'does not update \'friendly_name\'' do
+      user = User.from_token_payload(
+          jwt_payload_from(
+              identifiable_claim: identifiable_claim,
+              name: 'Person A',
+              email: 'Person@example.com'
+          )
+      )
+      expect(user.friendly_name).to eq('person-a')
+
+      first_user_id = user.id
+      user = User.from_token_payload(
+          jwt_payload_from(
+              identifiable_claim: identifiable_claim,
+              name: 'Person B',
+              email: 'Person@example.com'
+          )
+      )
+      expect(user.id).to eq(first_user_id)
+      expect(user.friendly_name).to eq('person-a')
     end
   end
 

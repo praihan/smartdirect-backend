@@ -35,6 +35,9 @@ gem 'pundit'
 # Use Closure tables for hierarchical structures
 gem 'closure_tree'
 
+# Use stringex for sanitizing names for URLs
+gem 'stringex'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
