@@ -124,6 +124,9 @@ class User < ApplicationRecord
   # Make sure our root Directory is actually a root directory
   validate :_validate_directory_is_root, on: :update
 
+  # Our friendly_name should be ascii only
+  validates_format_of :friendly_name, :with => /#{Settings[:app][:valid_directory_name_regex]}/
+
   # This is the first part of the claim. (e.g. 'github', 'google-oauth2')
   def oauth_provider
     return identifiable_claim_parts[0] || '<unknown>'
