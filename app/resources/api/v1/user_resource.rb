@@ -12,6 +12,9 @@ module Api
       # These are just general info about the user
       attributes :name, :email
 
+      # This is also an identifiable (unique) attribute of the user
+      attributes :friendly_name
+
       # The ROOT directory of the user
       has_one :directory
     end
