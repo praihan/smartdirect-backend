@@ -35,9 +35,13 @@ ActiveRecord::Schema.define(version: 20161111085743) do
 
   create_table "links", force: :cascade do |t|
     t.integer  "directory_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.string   "name"
+    t.string   "destination"
+    t.integer  "ttl",          default: 0
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
     t.index ["directory_id"], name: "index_links_on_directory_id", using: :btree
+    t.index ["name"], name: "index_links_on_name", using: :btree
   end
 
   create_table "users", force: :cascade do |t|

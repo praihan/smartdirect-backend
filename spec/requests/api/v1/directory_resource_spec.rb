@@ -83,6 +83,7 @@ RSpec.describe Api::V1::DirectoryResource, type: :request do
       expect(relationships['user']).to_not eq(nil)
       expect(relationships['parent']).to_not eq(nil)
       expect(relationships['children']).to_not eq(nil)
+      expect(relationships['ancestors']).to_not eq(nil)
     end
 
     it 'allows getting own directory' do

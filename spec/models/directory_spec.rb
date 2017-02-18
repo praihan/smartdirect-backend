@@ -208,6 +208,26 @@ RSpec.describe Directory, type: :model do
       root
     }
 
+    it 'shows empty ancestors for ROOT directory' do
+      root = default_tree
+      expect(root.ancestors).to match_array([])
+    end
+
+    it 'shows ROOT ancestor for top-level directory' do
+      child1a = default_tree.find_by_path(%w(1a))
+      expect(child1a.ancestors).to match_array([default_tree])
+    end
+
+    it 'shows ancestors in correct order' do
+      child4caaa = default_tree.find_by_path(%w(1c 2ca 3caa 4caaa))
+      expect(child4caaa.ancestors).to match_array([
+          default_tree,
+          default_tree.find_by_path(%w(1c)),
+          default_tree.find_by_path(%w(1c 2ca)),
+          default_tree.find_by_path(%w(1c 2ca 3caa)),
+       ])
+    end
+
     it 'can re-parent' do
       child2aa = default_tree.find_by_path(%w(1a 2aa))
       child1b = default_tree.find_by_path(%w(1b))
@@ -254,7 +274,7 @@ RSpec.describe Directory, type: :model do
         expect(dir2.valid?).to eq(false)
 
         expect(dir2.errors.messages[:name]).to(
-            match_array 'already have a sibling with the same value'
+            match_array ['already have a sibling with the same value']
         )
       end
 
@@ -266,7 +286,7 @@ RSpec.describe Directory, type: :model do
         expect(dir2.valid?).to eq(false)
 
         expect(dir2.errors.messages[:name]).to(
-            match_array 'already have a sibling with the same value'
+            match_array ['already have a sibling with the same value']
         )
       end
 

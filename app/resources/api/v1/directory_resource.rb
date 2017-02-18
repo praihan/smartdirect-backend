@@ -11,15 +11,16 @@ module Api
       # Tree relations
       has_one :parent, class_name: 'Directory'
       has_many :children, class_name: 'Directory'
+      has_many :ancestors, class_name: 'Directory', eager_load_on_include: false
 
       # Timestamps (readonly)
       attributes :created_at, :updated_at
 
       def self.updatable_fields(context)
-        return super - [:children, :created_at, :updated_at]
+        return super - [:user, :children, :ancestors, :created_at, :updated_at]
       end
       def self.creatable_fields(context)
-        return super - [:children, :created_at, :updated_at]
+        return super - [:user, :children, :ancestors, :created_at, :updated_at]
       end
 
       # Before we save, make sure we have our relationships properly set up
