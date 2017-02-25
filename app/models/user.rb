@@ -124,7 +124,9 @@ class User < ApplicationRecord
   # Make sure our root Directory is actually a root directory
   validate :_validate_directory_is_root, on: :update
 
-  # Our friendly_name should be ascii only
+  # Our friendly_name has some strict requirements
+  validates :friendly_name, length: { maximum: Settings[:app][:max_friendly_name_length] }
+  validates :friendly_name, uniqueness: true
   validates_format_of :friendly_name, :with => /#{Settings[:app][:valid_directory_name_regex]}/
 
   # This is the first part of the claim. (e.g. 'github', 'google-oauth2')
