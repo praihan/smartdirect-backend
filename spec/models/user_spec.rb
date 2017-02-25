@@ -169,7 +169,7 @@ RSpec.describe User, type: :model do
       expect(user.email).to eq('PersonB@example.com')
     end
 
-    it 'does not update \'friendly_name\'' do
+    it 'does not automatically update \'friendly_name\'' do
       user = User.from_token_payload(
           jwt_payload_from(
               identifiable_claim: identifiable_claim,
@@ -189,6 +189,26 @@ RSpec.describe User, type: :model do
       )
       expect(user.id).to eq(first_user_id)
       expect(user.friendly_name).to eq('person-a')
+    end
+
+    it 'does not allow duplicate\'friendly_name\'' do
+      user1 = create_dummy_user!(
+          identifiable_claim: 'google-oauth2|1234',
+          friendly_name: 'user1',
+      )
+      user2 = create_dummy_user!(
+          identifiable_claim: 'google-oauth2|5678',
+          friendly_name: 'user2',
+      )
+      # sanity checks
+      expect(user1.valid?).to eq(true)
+      expect(user2.valid?).to eq(true)
+
+      # conflict!
+      user2.friendly_name = user1.friendly_name
+
+      expect(user1.valid?).to eq(true)
+      expect(user2.valid?).to eq(false)
     end
   end
 
