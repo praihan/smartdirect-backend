@@ -14,7 +14,7 @@ class User < ApplicationRecord
             action: 'Authenticate User',
             message: 'Missing field(s) in JWT payload',
             severity: Errors::Severity::CRITICAL,
-            userdata: { :payload => payload }
+            userdata: { payload: payload }
         )
       end
 
@@ -30,7 +30,7 @@ class User < ApplicationRecord
             action: 'Authenticate User',
             message: "Unknown provider for JWT 'sub' claim '#{sub_claim}'",
             severity: Errors::Severity::CRITICAL,
-            userdata: { :payload => payload }
+            userdata: { payload: payload }
         )
       end
 
