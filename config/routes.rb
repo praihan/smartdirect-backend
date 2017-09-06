@@ -9,6 +9,7 @@ Rails.application.routes.draw do
 
       jsonapi_resources :users
       jsonapi_resources :directories
+      jsonapi_resource :linkations
     end
   end
 

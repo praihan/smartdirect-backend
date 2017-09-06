@@ -3,6 +3,8 @@
 app:
   valid_directory_name_regex: \A[A-Za-z0-9_\-\.\+]+\z
   max_directory_name_length: 31
+  valid_linkation_name_regex: \A[A-Za-z0-9_\-\.\+]+\z
+  max_linkation_name_length: 31
   valid_friendly_name_regex: \A[a-zA-Z0-9\-]+\z
   max_friendly_name_length: 40
 

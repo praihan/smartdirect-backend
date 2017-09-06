@@ -1,6 +1,6 @@
-class CreateLinks < ActiveRecord::Migration[5.0]
+class CreateLinkations < ActiveRecord::Migration[5.0]
   def change
-    create_table :links do |t|
+    create_table :linkations do |t|
       t.belongs_to :directory, index: true
 
       t.string :name, index: true

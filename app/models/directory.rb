@@ -2,7 +2,7 @@ class Directory < ApplicationRecord
 
   # A directory can contains other directories as well as files
   # Deleting is recursive
-  has_many :links, dependent: :destroy
+  has_many :linkations, dependent: :destroy
   belongs_to :user, optional: true
 
   # We can't have a directory that belongs to user A

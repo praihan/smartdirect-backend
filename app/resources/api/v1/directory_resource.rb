@@ -13,6 +13,9 @@ module Api
       has_many :children, class_name: 'Directory'
       has_many :ancestors, class_name: 'Directory', eager_load_on_include: false
 
+      # Contained links
+      has_many :linkations
+
       # Timestamps (readonly)
       attributes :created_at, :updated_at
 
