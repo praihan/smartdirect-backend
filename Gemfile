@@ -37,6 +37,8 @@ gem 'closure_tree'
 
 # Use stringex for sanitizing names for URLs
 gem 'stringex'
+# Use validate_url for ActiveModel URL validation
+gem 'validate_url'
 
 # Use Faker for making fake names and stuff
 gem 'faker'
