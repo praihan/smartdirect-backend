@@ -24,12 +24,12 @@ gem 'puma', '~> 3.0'
 gem 'config'
 
 # Use Knock for authentication
-gem 'knock', github: 'nsarno/knock'
+gem 'knock'
 
 # Use JR for simplifying JSON API creation
-gem 'jsonapi-resources'
+gem 'jsonapi-resources', '~> 0.9.0'
 # Use JR-Authorization + Pundit for Authorization
-gem 'jsonapi-authorization'
+gem 'jsonapi-authorization', '~> 1.0.0.alpha5'
 gem 'pundit'
 
 # Use Closure tables for hierarchical structures
