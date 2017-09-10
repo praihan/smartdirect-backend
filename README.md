@@ -10,47 +10,44 @@ Smartdirect is like Dropbox for URL-shorteners. Instead of files, you store link
 
 * [Web Frontend](https://github.com/prshreshtha/smartdirect-web)
 
-***
 
 ## Roadmap
 
-- [X] Implement User
+- [X] User
   * [X] JWT Authentication with dynamic user info
   * [X] Friendly-name generation
   * [X] JSON API access w/ Authorization (tested)
-- [X] Implement Directory
+- [X] Directory
   * [X] Closure tree structure
   * [X] Ownership validation (tested)
   * [X] Name validation (tested)
   * [X] Cascading delete (tested)
   * [X] JSON API access w/ Authorization (tested)
-- [ ] Implement Linkation
+- [ ] Linkation
   * [X] Ownership validation (**needs testing**)
   * [X] Name validation (**needs testing**)
   * [X] URL validation (**needs testing**)
   * [ ] Cascading delete from parent directory
   * [ ] JSON API access w/ Authorization (partial / **needs testing**)
-- [ ] Implement redirection
+- [ ] Redirection
   * [X] Friendly-name of user
   * [ ] Proper indexes for optimized look up (**needs verification**)
   * [ ] Redis/CDN cache integration using per-link TTL
 - [ ] Deployment
   * [ ] Heroku Ruby on Rails
   * [ ] Heroku Redis or CDN setup
+- [X] Travis CI
 
-***
 
 ## Ruby Version
 
 Smartdirect is tested with **Ruby 2.3.1** and **PostgreSQL 9.4** on Travis CI. See [`.travis.yml`](/.travis.yml) and [`.ruby-version`](/.ruby-version).
 
-***
 
 ## Running
 
 Smartdirect is built with [Rails 5](http://rubyonrails.org/). If you don't already know how to work with rails, consider [JetBrains RubyMine](https://www.jetbrains.com/ruby/).
 
-***
 
 ## Configuration
 
@@ -58,7 +55,6 @@ To run the app, you must create a `.env` file based on [`.env.template`](/.env.t
 
 Application settings can be found in [`config/settings.yml`](/config/settings.yml) and [`config/settings/`](/config/settings/).
 
-***
 
 ## Database Setup
 
@@ -86,7 +82,6 @@ Connection settings can also be modified using the environment variables `SMD_DA
 
 Make sure to run `bin/rails db:migrate RAILS_ENV=development` before starting!
 
-***
 
 ## Testing
 
@@ -98,13 +93,11 @@ Please see [`config/settings/test.yml`](/config/settings/test.yml) to see/modify
 
 Make sure to run `bin/rails db:migrate RAILS_ENV=test` before running tests!
 
-***
 
 ## Deploying
 
 TODO
 
-***
 
 ## Contributions
 
