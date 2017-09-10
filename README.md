@@ -80,7 +80,7 @@ ALTER USER smartdirect CREATEDB;
 ALTER DATABASE smartdirect_dev OWNER TO smartdirect
 ```
 
-Please see [settings/development.yml](/config/settings/development.yml) to see/modify the connection settings used when developing.
+Please see [`settings/development.yml`](/config/settings/development.yml) to see/modify the connection settings used when developing.
 
 Connection settings can also be modified using the environment variables `SMD_DATABASE_HOST`, `SMD_DATABASE_USER`, `SMD_DATABASE_PASSWORD`, `SMD_DATABASE_DB`, and `SMD_DATABASE_PORT`.
 
@@ -94,7 +94,7 @@ Testing is done with [RSpec](http://rspec.info/).
 
 You may use an IDE such as [JetBrains RubyMine](https://www.jetbrains.com/ruby/) or use `bin/rspec` from the command line.
 
-Please see [config.settings/test.yml](/config/settings/test.yml) to see/modify the connection settings used when testing.
+Please see [`config/settings/test.yml`](/config/settings/test.yml) to see/modify the connection settings used when testing.
 
 Make sure to run `bin/rails db:migrate RAILS_ENV=test` before running tests!
 
