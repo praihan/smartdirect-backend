@@ -7,10 +7,21 @@ Types::QueryType = GraphQL::ObjectType.define do
 
   field :directory, Types::DirectoryType do
     argument :id, !types.ID
+
     authorize! :show, policy: Directory
     before_scope DirectoryPolicy
+
     resolve ->(scope, args, _ctx) do
       scope.find_by_id args[:id]
+    end
+  end
+
+  field :directories, !types[Types::DirectoryType] do
+    authorize! :index, policy: Directory
+    before_scope DirectoryPolicy
+
+    resolve ->(scope, _args, _ctx) do
+      scope
     end
   end
 end
