@@ -26,10 +26,10 @@ gem 'config'
 # Use Knock for authentication
 gem 'knock'
 
-# Use JR for simplifying JSON API creation
-gem 'jsonapi-resources', '~> 0.9.0'
-# Use JR-Authorization + Pundit for Authorization
-gem 'jsonapi-authorization', '~> 1.0.0.alpha5'
+# Use graphql for creating GraphQL schema and server
+gem 'graphql'
+
+# Use Pundit for Authorization
 gem 'pundit'
 
 # Use Closure tables for hierarchical structures
