@@ -16,6 +16,17 @@ Types::DirectoryType = GraphQL::ObjectType.define do
   field :children, ->{ !types[Types::DirectoryType] }
   field :ancestors, ->{ !types[Types::DirectoryType] }
 
+  field :descendant, Types::DirectoryType do
+    argument :path, !types.String
+
+    resolve ->(directory, args, _ctx) do
+      directory.find_by_path args[:path]
+    end
+  end
+
+  # Contained links
+  field :linkations, ->{ !types[Types::LinkationType] }
+
   # Timestamps
   field :created_at, ->{ !Types::DateTimeType }
   field :updated_at, ->{ !Types::DateTimeType }
