@@ -31,6 +31,7 @@ gem 'graphql'
 
 # Use Pundit for Authorization
 gem 'pundit'
+gem 'graphql-pundit', github: 'ontohub/graphql-pundit'
 
 # Use Closure tables for hierarchical structures
 gem 'closure_tree'

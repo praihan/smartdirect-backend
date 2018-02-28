@@ -4,7 +4,7 @@ class DirectoryPolicy < ApplicationPolicy
 
     def initialize(user, scope)
       @user = user
-      @scope = scope
+      @scope = scope || Directory
     end
 
     def resolve
