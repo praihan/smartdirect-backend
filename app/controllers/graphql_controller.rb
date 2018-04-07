@@ -9,7 +9,7 @@ class GraphqlController < ApplicationController
       current_user: current_user,
       pundit: self,
     }
-    result = SmartdirectSchema.execute(query, variables: variables, context: context, operation_name: operation_name)
+    result = SMARTDIRECT_SCHEMA.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
   end
 

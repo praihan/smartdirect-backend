@@ -1,4 +1,4 @@
-SmartdirectSchema = GraphQL::Schema.define do
+SMARTDIRECT_SCHEMA = GraphQL::Schema.define do
   instrument(:field, GraphQL::Pundit::Instrumenter.new)
 
   query Types::QueryType
