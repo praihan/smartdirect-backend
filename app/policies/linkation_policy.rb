@@ -11,7 +11,6 @@ class LinkationPolicy < ApplicationPolicy
       return Directory.joins(:linkations).where('user_id' => user.id)
     end
   end
-
   # There is nothing tying a link to a user, only to a directory
   def index?
     return false
@@ -36,4 +35,5 @@ class LinkationPolicy < ApplicationPolicy
   def destroy?
     return true
   end
+
 end

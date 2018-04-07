@@ -1,4 +1,4 @@
-class GraphqlController < ApplicationController
+class UserGqlController < ApplicationController
   before_action :authenticate_user
 
   def execute
@@ -9,7 +9,7 @@ class GraphqlController < ApplicationController
       current_user: current_user,
       pundit: self,
     }
-    result = SMARTDIRECT_SCHEMA.execute(query, variables: variables, context: context, operation_name: operation_name)
+    result = UserGql::Schema.execute(query, variables: variables, context: context, operation_name: operation_name)
     render json: result
   end
 

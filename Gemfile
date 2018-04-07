@@ -27,11 +27,11 @@ gem 'config'
 gem 'knock'
 
 # Use graphql for creating GraphQL schema and server
-gem 'graphql'
+gem 'graphql', '1.8.0.pre10'
 
 # Use Pundit for Authorization
 gem 'pundit'
-gem 'graphql-pundit', github: 'ontohub/graphql-pundit'
+# gem 'graphql-pundit', github: 'ontohub/user_gql-pundit'
 
 # Use Closure tables for hierarchical structures
 gem 'closure_tree'

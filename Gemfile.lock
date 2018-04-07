@@ -1,11 +1,3 @@
-GIT
-  remote: git://github.com/ontohub/graphql-pundit.git
-  revision: 5d61e48eef23922fed2f9b360bb767bf9cdab9d8
-  specs:
-    graphql-pundit (0.5.1)
-      graphql (>= 1.6.4, < 1.8.0)
-      pundit (~> 1.1.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -74,7 +66,7 @@ GEM
       i18n (~> 0.5)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
-    graphql (1.7.14)
+    graphql (1.8.0.pre10)
     i18n (0.8.6)
     jwt (1.5.6)
     knock (2.1.1)
@@ -186,8 +178,7 @@ DEPENDENCIES
   config
   dotenv-rails
   faker
-  graphql
-  graphql-pundit!
+  graphql (= 1.8.0.pre10)
   knock
   pg (~> 0.19.pre.pre)
   puma (~> 3.0)
